@@ -25,7 +25,7 @@ header("Content-Disposition: attachment; filename= Lec_usu_".$_SESSION["no_cuent
             <th>No. Cuenta</th>
             <th>Descripción</th>
             <th>Fecha Queja</th>
-            <th>Hostras</th>
+            <th>Brigada</th>
        
 
 
