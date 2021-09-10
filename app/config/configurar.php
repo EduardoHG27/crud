@@ -17,7 +17,7 @@ define('RUTA_ESTILOS','http://crud-rep.ecommerce343.com/publico');
 
 define('NOMBRESITIO','CRUD');
 
-
+define('RUTA_APP',dirname(dirname(__FILE__)));
 
 /*
 define('DB_HOST','localhost');
