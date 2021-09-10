@@ -28,7 +28,7 @@
 					$_SESSION["sesion_ok"]="sesion_correcta";
 					$_SESSION["sesion_usuario"] = $usuario;
 					
-					var_dump($_SESSION["rol"],$_SESSION["sesion_ok"],$_SESSION["sesion_usuario"]);
+					//var_dump($_SESSION["rol"],$_SESSION["sesion_ok"],$_SESSION["sesion_usuario"]);
 					$time = time(); 
 					$_SESSION["fecha"] = date("Y-m-d", $time);
 
