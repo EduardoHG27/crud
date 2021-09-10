@@ -23,7 +23,7 @@
 				
 				if ( $resultados= $this->db->registros()) {
 
-					var_dump($resultados);
+					
 					$_SESSION["rol"]=$resultados[0]->rol;
 					$_SESSION["sesion_ok"]="sesion_correcta";
 					$_SESSION["sesion_usuario"] = $usuario;
