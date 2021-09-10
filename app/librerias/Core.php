@@ -6,7 +6,7 @@
 //ejemplo /artuculos/actualizar/4
 class Core
 {
-     protected $controladorActual='Paginas';
+     protected $controladorActual='paginas';
      protected $metodoActual='index'; 
      protected $parametros=[];
 
