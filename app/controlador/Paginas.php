@@ -992,6 +992,33 @@ class Paginas extends Controlador
         } else if ($resultado_sol['estado'] == 'error') {
             echo json_encode($resultado_sol);
             }
+            else if ($resultado_sol['estado'] == 'cortada') {
+                echo json_encode($resultado_sol);
+                }
+            
+    
+    }
+
+    public function buscar_datos_cortes()
+    {
+        $cod= array(
+            'txt_num' =>  $txt_num=$_POST['txt_num']
+        );
+         
+       
+       
+        $resultado_sol=$this->usuarioModelo->bsc_cuenta_cortes($cod);
+
+
+        if ($resultado_sol['estado'] == 'success') {
+            echo json_encode($resultado_sol);
+        } else if ($resultado_sol['estado'] == 'error') {
+            echo json_encode($resultado_sol);
+            }
+            else if ($resultado_sol['estado'] == 'cortada') {
+                echo json_encode($resultado_sol);
+                }
+            
     
     }
 
@@ -1011,6 +1038,9 @@ class Paginas extends Controlador
         } else if ($resultado_sol['estado'] == 'error') {
             echo json_encode($resultado_sol);
             }
+            else if ($resultado_sol['estado'] == 'reconectado') {
+                echo json_encode($resultado_sol);
+                }
     
     }
 
@@ -1241,8 +1271,7 @@ class Paginas extends Controlador
         $fecha = $_POST['fecha'];
         $fecha1 = $_POST['fecha_1'];
 
-        var_dump($caja,$fecha,$desc);
-     
+       
      
 
         $resultado_sol=$this->usuarioModelo->save_recon($data,$caja,$fecha,$fecha1);
@@ -1264,16 +1293,12 @@ class Paginas extends Controlador
         $col = $_POST['col'];
         $ven = json_decode($_POST['ven']);
         $sal = json_decode($_POST['sal']);
-        $desc = $_POST['desc'];
-     
-       var_dump($data);
-
-        
-      
-
+        $motivo = $_POST['motivo'];
+        $id_corte = $_POST['id_corte'];
+    
        
 
-        $resultado_sol=$this->usuarioModelo->save_corte($data,$nom,$dom,$col,$ven,$sal,$desc);
+        $resultado_sol=$this->usuarioModelo->save_corte($data,$nom,$dom,$col,$ven,$sal,$motivo,$id_corte);
 
         if ($resultado_sol['estado'] == 'success') {
             echo json_encode($resultado_sol);

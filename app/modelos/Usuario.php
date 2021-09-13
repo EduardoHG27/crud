@@ -366,7 +366,7 @@ class Usuario
 
         $txt_1                    = $datos['txt_1'];
         $txt_2                    = $datos['txt_2'];
-       
+
         $txt_5                    = $datos['txt_5'];
         $txt_6                    = $datos['txt_6'];
         $txt_rfc                  = $datos['txt_rfc'];
@@ -1008,14 +1008,14 @@ class Usuario
         ('1','" . $cuenta . "','" . $id . "','F','99','I.FIN','U','0','" . $int . "','" . $int . "')");
         $this->db->execute();
         //suma de mes actual total con interes
-        $acttot=$acttot + $int;
+        $acttot = $acttot + $int;
 
         $this->db->query("select NO_CONVENIO_COV from  dat_cob_header where NO_CUENTA_COV = " . $cuenta . "");
         $no_convenio = $this->db->registros();
 
 
-            //modificado monto para la suma
-        $mon=$ventot+$acttot;
+        //modificado monto para la suma
+        $mon = $ventot + $acttot;
 
         $this->db->query("insert into dat_fac_header(ID_COMP_FAC,NO_CU,NO_RECIBO_FAC,TIPO_DOC_FAC,CUS_FAC_HEADER,PAGOS_VENCIDOS_FAC,SALDO_VEN_FAC,SALDO_ACT_FAC,SALDO_TOT_FAC,NO_CONV_FAC,PROC_DIS_FAC)values
           ('1','" . $cuenta . "','" . $id . "','FAC','U','','" . $ventot . "','" . $acttot . "','" . $mon . "','" . $no_convenio[0]->NO_CONVENIO_COV . "','" . $pag . "')");
@@ -1252,18 +1252,18 @@ class Usuario
 
         $fech = $date->format('Y-m-d');
         $pagos = (int)$pag + 1;
-        $mpag=$pagos-1;
-  
+        $mpag = $pagos - 1;
+
         for ($i = 1; $i < $pagos; $i++) {
 
-            
+
             $fecha_suma = date("Y-m-d", strtotime($fech . "+ 1 month"));
-           
-            $res=round((float)$totdetallecob, 2)*$mpag*.03;
+
+            $res = round((float)$totdetallecob, 2) * $mpag * .03;
 
 
             $this->db->query("insert into dat_cob_detalle(ID_COMP_COBDET,NO_CUENTA_COBDET,NO_COV_COBDET,NO_PAGARE_COBDET,FECHA_VENCIMIENTO_COBDET,IMP_PAGARE_COBDET,STATUS_PAGARE_COBDET,IMP_INTERES_PAGARE)values
-            ('1','" . $cuenta . "','" . $id_cov . "','" . $i . "','" . $fecha_suma . "'," . round((float)$totdetallecob, 2) . ",'1','".$res."')");
+            ('1','" . $cuenta . "','" . $id_cov . "','" . $i . "','" . $fecha_suma . "'," . round((float)$totdetallecob, 2) . ",'1','" . $res . "')");
             $this->db->execute();
             $fech = $fecha_suma;
             $mpag--;
@@ -1487,7 +1487,7 @@ class Usuario
         $ruta                      = $cod['txt_ruta'];
         $this->db->query('SELECT `ID_COMP_COV` FROM `dat_cob_header` WHERE `NO_CUENTA_COV` =' . $ruta);
         $if = $this->db->registros();
-        
+
 
         if ($if == null) {
             $this->db->query('SELECT DESC_CONCEPTO_FAC_DETDET,IMP_MES_DETDET,IMP_VENCIDO_DETDET,IMP_TOT_DETDET FROM DAT_DETALLE_DETALLE WHERE NO_CUENTA_DETDET =' . $ruta);
@@ -1549,7 +1549,71 @@ class Usuario
         }
     }
 
-    
+
+    public function bsc_cuenta_cortes($cod)
+    {
+        $int = (int)$cod['txt_num'];
+
+        $this->db->query("select folio_cor,fecha_pago_cor from dat_cortes where no_cuenta_cor ='" . $int . "'");
+        
+
+       if($datos1 = $this->db->registros())
+       {
+        
+        if ($datos1[0]->fecha_pago_cor =='0000-00-00') {
+
+            return array('estado' => 'cortada');
+          
+        } else if ($datos1[0]->fecha_pago_cor!='0000-00-00') {
+            $this->db->query("select cq.desc_queja,fecha_queja,asignado_a_dq from
+            dat_quejas dq inner join cat_quejas cq on dq.id_queja_q=cq.id_queja 
+            where no_cuenta_q =" . $int . "");
+            $datos = $this->db->registros();
+
+            $this->db->query("select PAGOS_VENCIDOS_FAC,SALDO_TOT_FAC,dat_padron.NOMBRE_USUARIO,dat_padron.DOMICILIO_USUARIO,dat_padron.COLONIA_USUARIO 
+              from dat_fac_header 
+              inner join dat_padron on dat_padron.NO_CUENTA_USUARIO=dat_fac_header.NO_CU 
+              where no_cu =" . $int . "");
+
+
+
+            if ($datos1 = $this->db->registro()) {
+                return array('estado' => 'success', 'datos' => $datos1, 'datos_q' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+           
+           
+          
+        } else {
+            $this->db->query("select cq.desc_queja,fecha_queja,asignado_a_dq from
+                          dat_quejas dq inner join cat_quejas cq on dq.id_queja_q=cq.id_queja 
+                          where no_cuenta_q =" . $int . "");
+            $datos = $this->db->registros();
+
+            $this->db->query("select PAGOS_VENCIDOS_FAC,SALDO_TOT_FAC,dat_padron.NOMBRE_USUARIO,dat_padron.DOMICILIO_USUARIO,dat_padron.COLONIA_USUARIO 
+                            from dat_fac_header 
+                            inner join dat_padron on dat_padron.NO_CUENTA_USUARIO=dat_fac_header.NO_CU 
+                            where no_cu =" . $int . "");
+
+
+
+            if ($datos1 = $this->db->registro()) {
+                return array('estado' => 'success', 'datos' => $datos1, 'datos_q' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        }
+       }
+       else
+       {
+        return array('estado' => 'error');
+       }
+     
+      
+    }
+
+
     public function bsc_cuenta_queja($cod) 
     {
         $int = (int)$cod['txt_num'];
@@ -1574,21 +1638,51 @@ class Usuario
     {
         $int = (int)$cod['txt_num'];
 
-             //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
-             //true sino error 
-        $this->db->query("select PAGOS_VENCIDOS_FAC,SALDO_TOT_FAC,dat_padron.NOMBRE_USUARIO,dat_padron.DOMICILIO_USUARIO,dat_padron.COLONIA_USUARIO,cor.MOTIVO_COR from dat_fac_header inner join dat_padron on dat_padron.NO_CUENTA_USUARIO=dat_fac_header.NO_CUENTA_FAC inner join dat_cortes cor on cor.no_cuenta_cor=dat_padron.no_cuenta_usuario where no_cuenta_fac =" . $int . "");
-        $datos1 = $this->db->registro();
-        if ($datos = $this->db->registros()) {
-            return array('estado' => 'success', 'datos' => $datos1);
-        } else {
-            return array('estado' => 'error');
+
+        $this->db->query("select fecha_pago_cor
+                            from dat_cortes 
+                            where no_cuenta_cor ='" . $int . "'");
+
+        $datos = $this->db->registro();
+
+
+       if($datos)
+       {
+        if ($datos->fecha_pago_cor == '0000-00-00') {
+            $this->db->query("select dc.*,dp.NOMBRE_USUARIO,dp.DOMICILIO_USUARIO,dp.COLONIA_USUARIO ,fh.PAGOS_VENCIDOS_FAC,fh.SALDO_TOT_FAC
+            from dat_cortes dc 
+            inner join dat_padron dp on dp.NO_CUENTA_USUARIO=dc.no_cuenta_cor
+            inner join dat_fac_header fh on fh.NO_CU=dc.no_cuenta_cor
+            where no_cuenta_cor ='" . $int . "'");
+
+            if ($datos1 = $this->db->registro()) {
+                return array('estado' => 'success', 'datos' => $datos1);
+            } else {
+                return array('estado' => 'error');
+            }
         }
+        else
+        return array('estado' => 'reconectado');
+            
+       }
+       else
+       return array('estado' => 'error');
+       
+       
+
+
+        //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
+        //true sino error 
+
+        // $this->db->query("select PAGOS_VENCIDOS_FAC,SALDO_TOT_FAC,dat_padron.NOMBRE_USUARIO,dat_padron.DOMICILIO_USUARIO,dat_padron.COLONIA_USUARIO,cor.MOTIVO_COR from dat_fac_header inner join dat_padron on dat_padron.NO_CUENTA_USUARIO=dat_fac_header.NO_CUENTA_FAC inner join dat_cortes cor on cor.no_cuenta_cor=dat_padron.no_cuenta_usuario where no_cu  =" . $int . "");
+
+
     }
 
 
-   
 
-    
+
+
     public function agregar_filas($cod)
     {
         $int = (int)$cod['txt_fila'];
@@ -1704,7 +1798,7 @@ class Usuario
         }
     }
 
-    public function save_queja($data,$nom,$dom,$col,$ven,$sal,$sel,$desc)
+    public function save_queja($data, $nom, $dom, $col, $ven, $sal, $sel, $desc)
     {
 
 
@@ -1712,77 +1806,82 @@ class Usuario
         $fechaActual = date('Y-m-d');
 
 
-  
-        $this->db->query("SELECT desc_q FROM dat_quejas where id_queja_q='" . $sel . "' and no_cuenta_q = '".$data."'");
+
+        $this->db->query("SELECT desc_q FROM dat_quejas where id_queja_q='" . $sel . "' and no_cuenta_q = '" . $data . "'");
         $dat = $this->db->registro();
 
-     
-        if($dat)
-        {
+
+        if ($dat) {
             return array('estado' => 'duplicado');
-        }
-        else
-        {
+        } else {
             $this->db->query("insert into dat_quejas (id_comp_q,folio_queja,no_cuenta_q,id_queja_q,desc_q,fecha_queja,status)values
-            ('1','" . $id . "','" . $data . "','" . $sel . "','" . $desc . "','" .$fechaActual. "','A')");
+            ('1','" . $id . "','" . $data . "','" . $sel . "','" . $desc . "','" . $fechaActual . "','A')");
             //vincularvalores
-    
+
             if ($this->db->execute()) {
-    
-                return array('estado' => 'success','datos'=>$id);
+
+                return array('estado' => 'success', 'datos' => $id);
             } else {
                 return array('estado' => 'false', 'folio' => 'error');
             }
         }
-
-
-      
     }
 
-    public function save_recon($data,$caja,$fecha,$fecha_1)
+    public function save_recon($data, $caja, $fecha, $fecha_1)
     {
-   
-    
 
-        
 
-        $this->db->query("update dat_cortes set caja_cor= '".$caja."',fecha_pago_cor='".$fecha."',fecha_rec_cor='".$fecha_1."' where no_cuenta_cor = '".$data."'");
+
+
+
+        $this->db->query("update dat_cortes set caja_cor= '" . $caja . "',fecha_pago_cor='" . $fecha . "',fecha_rec_cor='" . $fecha_1 . "' where no_cuenta_cor = '" . $data . "'");
 
         //vincularvalores
 
         if ($this->db->execute()) {
 
-            $this->db->query("update dat_padron set id_status_usuario= 'A' where no_cuenta_usuario = '".$data."'");
+            $this->db->query("update dat_padron set id_status_usuario= 'A' where no_cuenta_usuario = '" . $data . "'");
             $this->db->execute();
 
-            return array('estado' => 'success');
+            return array('estado' => 'success','no_cuenta'=>$data);
         } else {
             return array('estado' => 'false', 'folio' => 'error');
         }
     }
 
-    public function save_corte($data,$nom,$dom,$col,$ven,$sal,$desc)
+    public function save_corte($data, $nom, $dom, $col, $ven, $sal, $motivo, $id_corte)
     {
 
+        $this->db->query("select fecha_pago_cor from dat_cortes where no_cuenta_cor =" . $data . "");
+        $datos1 = $this->db->registro();
 
         $id = $this->obtener_id("COR");
         $fechaActual = date('Y-m-d');
 
-  
+        if ($datos1) {
+            $this->db->query("update dat_cortes set fecha_pago_cor= '',fecha_rec_cor='',fecha_cor ='" . $fechaActual . "',folio_cor = '" . $id . "',motivo_cor = '" . $motivo . "',desc_corta_corte = '" . $id_corte . "' where no_cuenta_cor = '" . $data . "'");
+            if ($this->db->execute()) {
 
+                $this->db->query("update dat_padron set id_status_usuario= 'k' where no_cuenta_usuario = '" . $data . "'");
+                $this->db->execute();
 
-        $this->db->query("insert into dat_cortes (id_comp_cor,folio_cor,no_cuenta_cor,fecha_cor,motivo_cor)values
-        ('1','" . $id . "','" . $data . "','" . $fechaActual . "','" . $desc . "')");
-        //vincularvalores
-
-        if ($this->db->execute()) {
-
-            $this->db->query("update dat_padron set id_status_usuario= 'k' where no_cuenta_usuario = '".$data."'");
-            $this->db->execute();
-
-            return array('estado' => 'success');
+                return array('estado' => 'success');
+            }
         } else {
-            return array('estado' => 'false', 'folio' => 'error');
+
+            $this->db->query("insert into dat_cortes (id_comp_cor,folio_cor,no_cuenta_cor,fecha_cor,motivo_cor,desc_corta_corte)values
+            ('1','" . $id . "','" . $data . "','" . $fechaActual . "','" . $motivo . "','" . $id_corte . "')");
+            //vincularvalores
+
+            if ($this->db->execute()) {
+
+                $this->db->query("update dat_padron set id_status_usuario= 'k' where no_cuenta_usuario = '" . $data . "'");
+                $this->db->execute();
+
+                return array('estado' => 'success');
+            } else {
+                return array('estado' => 'false', 'folio' => 'error');
+            }
         }
     }
 
@@ -2262,7 +2361,7 @@ class Usuario
         }
     }
 
-/*
+    /*
     public function select_pad($datos)
     {
         $txtid                           = $datos['txt_reg'];

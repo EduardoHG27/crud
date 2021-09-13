@@ -14,6 +14,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
 
 <div class="col-md-12">
+<h2> Registro de quejas</h2>
   <form class="form-horizontal" id="frmB">
 
 
@@ -21,7 +22,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
       <div class="col-md-3">
         <div class="form-group">
-          <input id="txt_num" name="txt_num" class="form-control mr-sm-2" type="text" placeholder="No. Solicitud" aria-label="Search">
+          <input id="txt_num" name="txt_num" class="form-control mr-sm-2" type="text" placeholder="No. Cuenta" aria-label="Search">
         </div>
       </div>
 
@@ -93,7 +94,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label>Referencia</label>
+              <label>Observaciones</label>
               <textarea class="form-control" name="txt_ref" id="txt_ref" rows="3" placeholder="Enter ..."></textarea>
             </div>
           </div>

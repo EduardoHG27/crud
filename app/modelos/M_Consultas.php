@@ -81,7 +81,7 @@ class M_Consultas{
         if($cuenta=='')
         {
 
-            $this->db->query("select q.NO_CUENTA_Q,dat.NOMBRE_USUARIO,dat.DOMICILIO_USUARIO,c.DESC_QUEJA,q.DESC_Q,q.FECHA_QUEJA,q.FOLIO_QUEJA from dat_quejas q inner join dat_padron dat on (dat.NO_CUENTA_USUARIO=q.no_cuenta_q)inner join cat_quejas c on (c.id_queja=q.id_queja_q) where id_queja_q =".$op." and status ='".$act."'");
+            $this->db->query("select q.NO_CUENTA_Q,dat.NOMBRE_USUARIO,dat.DOMICILIO_USUARIO,c.DESC_QUEJA,q.DESC_Q,q.FECHA_QUEJA,q.FOLIO_QUEJA from dat_quejas q inner join dat_padron dat on (dat.NO_CUENTA_USUARIO=q.no_cuenta_q) inner join cat_quejas c on (c.id_queja=q.id_queja_q) where id_queja_q =".$op." and status ='".$act."'");
        
             if($datos=$this->db->registros())
             {
@@ -156,16 +156,97 @@ class M_Consultas{
         $_SESSION["date"]=$date;
         $_SESSION["date1"]=$date1;
 
+  
+      
              //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
              //true sino error 
-        $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and status = '".$act."' and fecha_asignacion BETWEEN '".$date."' AND '".$date1."';");
+             if($act=='T' && $bri =='t')
+             {
+                
+                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."';");
      
-        if ($datos = $this->db->registros()) {
-  
-            return array('estado' => 'success', 'datos' => $datos);
-        } else {
-            return array('estado' => 'error');
-        }
+                if ($datos = $this->db->registros()) {
+        
+                    return array('estado' => 'success', 'datos' => $datos);
+                } else {
+                    return array('estado' => 'error');
+                }
+             }
+             else if ($act=='T' && $bri !='na' && $bri!='t')
+             {
+               
+                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and asignado_a_dq ='" . $bri . "';");
+     
+                if ($datos = $this->db->registros()) {
+          
+
+                    $_SESSION["status"]=$datos[0]->status;
+                    return array('estado' => 'success', 'datos' => $datos);
+                } else {
+                    return array('estado' => 'error');
+                }
+             }
+             else if ($act!='T' && $bri =='t')
+             {
+              
+                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and status = '".$act."' ;");
+     
+                if ($datos = $this->db->registros()) {
+          
+                    $_SESSION["status"]=$datos[0]->status;
+                    return array('estado' => 'success', 'datos' => $datos);
+                } else {
+                    return array('estado' => 'error');
+                }
+             }
+
+
+             else if ($act!='T' && $bri !='t' && $bri !='na')
+             {
+              
+                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and status = '".$act."' and asignado_a_dq  = '".$bri."'  ;");
+     
+                if ($datos = $this->db->registros()) {
+          
+                    $_SESSION["status"]=$datos[0]->status;
+                    return array('estado' => 'success', 'datos' => $datos);
+                } else {
+                    return array('estado' => 'error');
+                }
+             }
+
+
+
+             else if ($act=='T' && $bri ='na')
+             {
+               
+                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and asignado_a_dq = '' ;");
+     
+                if ($datos = $this->db->registros()) {
+          
+
+                    $_SESSION["status"]=$datos[0]->status;
+                    return array('estado' => 'success', 'datos' => $datos);
+                } else {
+                    return array('estado' => 'error');
+                }
+             }
+             else if ($act!='T' && $bri ='na')
+             {
+               
+                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and asignado_a_dq = '' ;");
+     
+                if ($datos = $this->db->registros()) {
+          
+
+                    $_SESSION["status"]=$datos[0]->status;
+                    return array('estado' => 'success', 'datos' => $datos);
+                } else {
+                    return array('estado' => 'error');
+                }
+             }
+            
+       
     }
 
     public function combo_brigada($id)

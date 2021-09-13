@@ -25,10 +25,10 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
         </div>
         <div class="col-md-3">
           <div class="form-group">
+          <div class="row">
             <input type="button" data-toggle="collapse" href="#collapseExample" class="btn btn-primary mr-sm-2" id="btn_Buscar" name="btn_Buscar" value="Buscar" />
-            <input type="button" data-toggle="collapse" href="#collapseExample" class="btn btn-primary mr-sm-2" id="btn_imprimir" name="btn_imprimir" value="Convenir" />
-
-
+            <input type="button" data-toggle="collapse" href="#collapseExample" class="btn btn-primary mr-sm-2" id="btn_conv" name="btn_conv" value="Convenir" />
+            </div>
           </div>
           <div class="form-group">
             <!--    <input type="button" class="btn btn-info" id="btn_1" name="btn_1" value="Guardar" />-->
@@ -243,7 +243,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
     // pagina cargada ejecutar ajax o fetch await, etc. ...
     anadir2();
     document.getElementById('collapse2').style.display = "none";
-
+    document.getElementById('btn_conv').style.display = "none";
   });
 
   function anadir2() {
@@ -477,7 +477,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
           if (result.status == 'success') {
 
             document.getElementById('collapse2').style.display = "block";
-
+            document.getElementById('btn_conv').style.display = "block";
             $('#txt_1').val(datos[0].NO_RECIBO_DETH);
             $('#txt_2').val(datos[0].SALDO_ACT_DETH);
             $('#txt_3').val(datos[0].SALDO_VEN_DETH);
@@ -509,26 +509,23 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
             Swal.fire('No. Cuenta no encotrado');
             $('#txt_ruta').val("");
-            document.getElementById('collapse2').style.display = "none";
 
+            document.getElementById('collapse2').style.display = "none";
+            document.getElementById('btn_conv').style.display = "none";
             res.innerHTML = '';
+
             for (let item of resultado) {
               int = int + 1;
-              res.innerHTML += `   
-
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>`
+              res.innerHTML += `<td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>`
 
             }
           }
 
         }
       });
-
-
-
     });
 
   });
@@ -573,7 +570,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
 
 
-  $('#btn_imprimir').click(function() {
+  $('#btn_conv').click(function() {
 
 
     tipo = $('#txt_ruta').val();

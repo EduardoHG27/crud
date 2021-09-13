@@ -237,7 +237,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
               anadir2();
 
-
+              document.getElementById('btn_guardar').disabled = true;
 
             });
 
@@ -283,7 +283,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
               var datos = $('#frmB').serialize();
 
-              console.log(datos);
+              
               const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -303,14 +303,39 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                       title: 'Exito: Registro encontrado.'
                     })
 
+                    document.getElementById('btn_guardar').disabled = false;
 
                     $('#nombre').val(datos1.NOMBRE_USUARIO);
                     $('#domicilio').val(datos1.DOMICILIO_USUARIO);
                     $('#colonia').val(datos1.COLONIA_USUARIO);
                     $('#vencidos').val(datos1.PAGOS_VENCIDOS_FAC);
                     $('#saldo').val(datos1.SALDO_TOT_FAC);
-                    $('#txt_ref').val(datos1.MOTIVO_COR);
+                    $('#txt_ref').val(datos1.motivo_cor);
 
+                  }
+                  else if (result.estado == 'reconectado') {
+                    Toast.fire({
+                      icon: 'error',
+                      title: 'Aviso: El servicio se encuentra conectado.'
+                    })
+
+                   
+
+
+                  }
+                  else
+                  {
+                    Toast.fire({
+                      icon: 'error',
+                      title: 'Aviso: No. Cuenta sin pagos .'
+                    })
+
+                    $('#nombre').val("");
+                    $('#domicilio').val("");
+                    $('#colonia').val("");
+                    $('#vencidos').val("");
+                    $('#saldo').val("");
+                    $('#txt_ref').val("");
                   }
                 }
               });
@@ -322,8 +347,22 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
               var datos = $('#frmDatos').serialize();
               var num = $('#txt_num').serialize();
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000
+              });
 
-
+              if($('#txt_caja').val() =="" || $('#datepicker').val() =="" ||$('#datepicker_1').val() ==""){
+              
+              Toast.fire({
+                    icon: 'error',
+                    title: 'Campos Vacios!!'
+                  })
+            
+            }else
+            {
               $.ajax({
                 type: "POST",
                 url: "<?php echo RUTA_URL ?>/paginas/guardar_recon/",
@@ -341,49 +380,34 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                 success: function(result) {
                   var result = $.parseJSON(result);
                   var datos1 = result.datos;
-                  no_sol = result.folio;
+                  no_sol = result.no_cuenta;
 
                   if (result.estado == 'success') {
 
-                    $('#txt_1').val("");
-                    $('#txt_2').val("");
-                    $('#txt_3').val("");
-                    $('#txt_4').val("");
-                    $('#txt_5').val("");
-                    $('#txt_6').val("");
-                    $('#txt_rfc').val("");
-                    $('#txt_7').val("");
-                    $('#txt_8').val("");
-                    $('#txt_9').val("");
-                    $('#txt_10').val("");
-                    $('#txt_11').val("");
-                    $('#txt_12').val("");
-                    $('#txt_13').val("");
-                    $('#txt_14').val("");
-                    $('#txt_15').val("");
-                    $('#txt_16').val("");
-                    $('#txt_17').val("");
-                    $('#txt_18').val("");
-
+                 
+                 
+                    $('#nombre').val("");
+                    $('#domicilio').val("");
+                    $('#colonia').val("");
+                    $('#vencidos').val("");
+                    $('#saldo').val("");
                     $('#txt_ref').val("");
 
-                    $('#txt_tel').val("");
+                    $('#txt_caja').val("");
+                    $('#datepicker').val("");
 
-                    document.getElementById('sel_1').selectedIndex = 0;
-                    document.getElementById('sel_2').selectedIndex = 0;
-                    document.getElementById('sel_3').selectedIndex = 0;
+                    $('#datepicker_1').val("");
 
+                
 
                     Swal.fire(
-                      'Solicitud Generada Con Exito',
-                      'No. Solicitud : ' + no_sol,
+                      'Servicio Reconectado',
+                      'No. Cuenta : ' + no_sol,
                       'success'
                     )
 
 
 
-                    $('#txt_importe_1').val(datos1[0].IMPORTE_TOTAL_ACU);
-                    $(".modal").modal("show");
 
 
                   } else {
@@ -394,6 +418,10 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                   }
                 }
               });
+
+            }
+
+           
 
             });
 

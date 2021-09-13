@@ -59,6 +59,8 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
         <option value="C">Cerrada</option>;
 
+        <option value="T">Todas</option>;
+
       </select>
     </div>
 
@@ -161,6 +163,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                   <th>Descripción</th>
                   <th>Fecha Queja</th>
                   <th>Brigada</th>
+                  <th>Estatus</th>
                 </tr>
               </thead>
               <tbody id="res">
@@ -378,8 +381,13 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
           $brigada.empty();
           $('#sel_bri').empty();
           for (var i = 0; i < datos1.length; i++) {
-            $brigada.append('<option id=' + datos1[i].id_brigada + ' value=' + datos1[i].id_brigada + '>' + datos1[i].desc_brigada + '</option>');
+            $brigada.append("<option id='" + datos1[i].desc_brigada + "' value='" + datos1[i].desc_brigada + "'>" + datos1[i].desc_brigada + "</option>");
+
+
+
           }
+          $brigada.append("<option value='na'>No Asignada</option>");
+          $brigada.append("<option value='t'>Todas</option>");
 
         } else {
           var $brigada = $('#sel_bri');
@@ -392,7 +400,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
     });
 
   }
-  
+
 
 
   $('#btn_Buscar').click(function() {
@@ -412,26 +420,40 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
         var result = $.parseJSON(result);
         var datos1 = result.datos;
 
-        document.getElementById('collapseExample').style.display = "block";
+        if (result.estado == 'success') {
+
+
+          document.getElementById('collapseExample').style.display = "block";
 
 
 
-        let res = document.querySelector('#res');
-        int = 0;
-        res.innerHTML = '';
+          let res = document.querySelector('#res');
+          int = 0;
+          res.innerHTML = '';
 
-        for (let item of datos1) {
-          int = int + 1;
-          res.innerHTML += `
-                          <td>${item.folio_queja}</td>
-                          <td>${item.no_cuenta_q}</td>
-                          <td>${item.desc_q}</td>
-                          <td>${item.fecha_queja}</td>
-                          <td>${item.asignado_a_dq}</td>
-                                     `
+          for (let item of datos1) {
+            int = int + 1;
+            res.innerHTML += `
+                  <td>${item.folio_queja}</td>
+                  <td>${item.no_cuenta_q}</td>
+                  <td>${item.desc_q}</td>
+                  <td>${item.fecha_queja}</td>
+                  <td>${item.asignado_a_dq}</td>
+                  <td>${item.status}</td>
+                             `
+          }
+
+        } else {
+          Toast.fire({
+          icon: 'error',
+          title: 'Error: Consulta sin datos.'
+        })
         }
 
 
+
+
+    
 
       }
     });
@@ -594,7 +616,9 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
         for (let item of datos1) {
           int = int + 1;
-          res.innerHTML += `<option value="${item.id_brigada}">${item.desc_brigada}</option>`
+          res.innerHTML += `<option value="${item.id_brigada}">${item.desc_brigada}</option>
+                         
+                              `
         }
 
       }
@@ -649,8 +673,8 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
   function func_excel() {
 
-location.href = "<?php echo RUTA_URL; ?>/paginas/excel_quejas";
+    location.href = "<?php echo RUTA_URL; ?>/paginas/excel_quejas";
 
-}
+  }
 </script>
 <?php require RUTA_APP . '/vistas/inc/footer.php'; ?>
