@@ -220,7 +220,7 @@ public function tabla_ajax()
             'datepicker_1' =>  $datepicker_1=$_POST['datepicker_1']
 
         );
-    
+        
         $res=$this->usuarioModelo->sel_queja($datos);
         
 
