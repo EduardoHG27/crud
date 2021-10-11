@@ -422,7 +422,10 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
         if (result.estado == 'success') {
 
-
+          Toast.fire({
+                      icon: 'success',
+                      title: 'Busqueda realizada!!'
+                    })
           document.getElementById('collapseExample').style.display = "block";
 
 
@@ -448,6 +451,18 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
           icon: 'error',
           title: 'Error: Consulta sin datos.'
         })
+        res.innerHTML = '';
+
+        int = int + 1;
+            res.innerHTML += `
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                             `
+
         }
 
 

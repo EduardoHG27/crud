@@ -3,7 +3,7 @@
 // ruta de la aplicacion
 
 
-
+/*
 define('DB_HOST','localhost');
 define('DB_USUARIO','u928450450_root_1');
 define('DB_PASSWORD','Crud_2727');
@@ -19,7 +19,8 @@ define('NOMBRESITIO','CRUD');
 
 define('RUTA_APP',dirname(dirname(__FILE__)));
 
-/*
+*/
+
 define('DB_HOST','localhost');
 define('DB_USUARIO','root');
 define('DB_PASSWORD','');
@@ -35,8 +36,8 @@ define('RUTA_ESTILOS','http://localhost:8080/crud/publico');
 
 define('NOMBRESITIO','CRUD');
 
-define('RUTA_REPORT','http://localhost:8080/crud/vendor/tecnick/examples');
-*/
+//define('RUTA_REPORT','http://localhost:8080/crud/vendor/tecnick/examples');
+
 
 $GLOBALS['no_cuenta']=0;
 $GLOBALS['bandera']=0;

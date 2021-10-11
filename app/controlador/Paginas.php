@@ -1018,6 +1018,9 @@ class Paginas extends Controlador
             else if ($resultado_sol['estado'] == 'cortada') {
                 echo json_encode($resultado_sol);
                 }
+                else if ($resultado_sol['estado'] == 'toma_cortada') {
+                    echo json_encode($resultado_sol);
+                    }
             
     
     }
@@ -1267,20 +1270,25 @@ class Paginas extends Controlador
         
       
         $desc = $_POST['desc'];
-        $caja = $_POST['caja'];
-        $fecha = $_POST['fecha'];
+      
+       
         $fecha1 = $_POST['fecha_1'];
+        $fecha = $_POST['fecha'];
+        $folio = $_POST['folio_cor'];
 
        
      
 
-        $resultado_sol=$this->usuarioModelo->save_recon($data,$caja,$fecha,$fecha1);
+        $resultado_sol=$this->usuarioModelo->save_recon($data,$fecha,$fecha1,$folio);
 
         if ($resultado_sol['estado'] == 'success') {
             echo json_encode($resultado_sol);
         } else if ($resultado_sol['estado'] == 'error') {
             echo json_encode($resultado_sol);
             }
+            else if ($resultado_sol['estado'] == 'val') {
+                echo json_encode($resultado_sol);
+                }
     }
 
 

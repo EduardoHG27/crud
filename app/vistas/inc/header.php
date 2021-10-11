@@ -1,6 +1,4 @@
 <?php 
-
-
 if(!isset($_SESSION["sesion_ok"])){ //muchas veces el usuario puede copiar y pegar la url de la pagina
 //para entrar a la aplicacion, pero con esta condicion le decimos que la variable de sesion no existe por lo tanto no puede
 //ver el contenido de esta pagina y obiamente lo redireccionamos al formulario de acceso que esta en el archivo index.php

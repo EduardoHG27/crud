@@ -33,8 +33,8 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
         </div>
       </div>
       <div class="col-md-3">
-    
-        
+
+
       </div>
     </div>
 
@@ -76,32 +76,33 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
           </div>
         </div>
         <div class="col-md-4">
-        <div class="form-group">
+          <div class="form-group">
             <label>Tipo</label>
             <select name="select_1" id="select_1" class="form-control" onchange="myFunction()">
-                  <?php
-                  echo '<option value= ""></option>';
-                  $query = $mysqli->query("select desc_larga_corte,desc_corta_corte from cat_cortes");
-                  while ($valores = mysqli_fetch_array($query)) {
+              <?php
+              echo '<option value= ""></option>';
+              $query = $mysqli->query("select desc_larga_corte,desc_corta_corte from cat_cortes");
+              while ($valores = mysqli_fetch_array($query)) {
 
-                    echo '<option value="' . $valores['desc_corta_corte'] . '">' . $valores['desc_larga_corte'] . '</option>';
-                  } ?>
-                </select>  </div>
+                echo '<option value="' . $valores['desc_corta_corte'] . '">' . $valores['desc_larga_corte'] . '</option>';
+              } ?>
+            </select>
+          </div>
         </div>
       </div>
 
       <div class="row">
-      <div class="col-md-12">
-      <div class="form-group">
-        <label>Motivo</label>
-        <textarea class="form-control" name="txt_motivo" id="txt_motivo" rows="3" placeholder="Enter ..."></textarea>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Motivo</label>
+            <textarea class="form-control" name="txt_motivo" id="txt_motivo" rows="3" placeholder="Enter ..."></textarea>
+          </div>
+        </div>
       </div>
-      </div>
-    </div>
     </div>
     <div class="col-md-6">
 
-    <input type="button" data-toggle="collapse" href="#collapseExample" class="btn btn-primary btn-sm" id="btn_guardar" name="btn_guardar" value="Guardar"  />
+      <input type="button" data-toggle="collapse" href="#collapseExample" class="btn btn-primary btn-sm" id="btn_guardar" name="btn_guardar" value="Guardar" />
 
     </div>
 
@@ -221,8 +222,8 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
               anadir2();
 
               document.getElementById('btn_guardar').disabled = true;
-              
-         
+
+
 
             });
 
@@ -300,7 +301,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
               var datos = $('#frmB').serialize();
 
-         
+
               const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -313,7 +314,10 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                 data: datos,
                 success: function(result) {
                   var result = $.parseJSON(result);
-                  var datos1 = result.datos;
+                  var fac = result.datos;
+                  var pad = result.datos_q;
+
+
                   if (result.estado == 'success') {
                     Toast.fire({
                       icon: 'success',
@@ -321,23 +325,66 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                     })
 
 
-                    $('#nombre').val(datos1.NOMBRE_USUARIO);
-                    $('#domicilio').val(datos1.DOMICILIO_USUARIO);
-                    $('#colonia').val(datos1.COLONIA_USUARIO);
-                    $('#vencidos').val(datos1.PAGOS_VENCIDOS_FAC);
-                    $('#saldo').val(datos1.SALDO_TOT_FAC);
+                    $('#nombre').val(pad.NOMBRE_USUARIO);
+                    $('#domicilio').val(pad.DOMICILIO_USUARIO);
+                    $('#colonia').val(pad.COLONIA_USUARIO);
+                    $('#vencidos').val(fac.PAGOS_VENCIDOS_FAC);
+                    $('#saldo').val(fac.SALDO_TOT_FAC);
                     document.getElementById('btn_guardar').disabled = false;
-                  }
-                  else  if (result.estado == 'cortada') {
+                  } else if (result.estado == 'toma_cortada') {
                     Toast.fire({
                       icon: 'error',
-                      title: 'Alerta: Cuenta con servicio cortado.'
+                      title: 'Alerta: Toma cortada.'
                     })
-                  }
-                  else  if (result.estado == 'error') {
+
+                    Swal.fire({
+                      title: 'Existe registro de corte en Base de Datos.  '+pad.ID_STATUS_USUARIO,
+                      text: '¿Desea agregar registro?',
+                      showDenyButton: true,
+                      showCancelButton: true,
+                      confirmButtonText: `Si`,
+                      denyButtonText: `No Modificar`,
+                    }).then((result) => {
+                     
+                      /* Read more about isConfirmed, isDenied below */
+                      if (result.value==true) {
+        
+                        $('#nombre').val(pad.NOMBRE_USUARIO);
+                        $('#domicilio').val(pad.DOMICILIO_USUARIO);
+                        $('#colonia').val(pad.COLONIA_USUARIO);
+                        $('#vencidos').val(fac.PAGOS_VENCIDOS_FAC);
+                        $('#saldo').val(fac.SALDO_TOT_FAC);
+
+                        document.getElementById('btn_guardar').disabled = false;
+                        document.getElementById("btn_guardar").value = "Agregar";
+                      } else if (result.value!=true) {
+                        $('#nombre').val('');
+                    $('#domicilio').val('');
+                    $('#colonia').val('');
+                    $('#vencidos').val('');
+                    $('#saldo').val('');
+                    document.getElementById("btn_guardar").value = "Guardar";
+                    document.getElementById('btn_guardar').disabled = true;
+                        Swal.fire('No se modificaron datos', '', 'info')
+                      }
+                    })
+
+                    $('#nombre').val('');
+                    $('#domicilio').val('');
+                    $('#colonia').val('');
+                    $('#vencidos').val('');
+                    $('#saldo').val('');
+
+                    document.getElementById('btn_guardar').disabled = true;
+                  } else if (result.estado == 'cortada') {
                     Toast.fire({
                       icon: 'error',
-                      title: 'Alerta: Cuenta sin pagos.'
+                      title: 'Alerta: Error en el DAT_FAC.'
+                    })
+                  } else if (result.estado == 'error') {
+                    Toast.fire({
+                      icon: 'error',
+                      title: 'Alerta: Cuenta no encontrada.'
                     })
 
                     $('#nombre').val('');
@@ -348,6 +395,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 
                     document.getElementById('btn_guardar').disabled = true;
                   }
+
                 }
               });
 
@@ -362,62 +410,60 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                 showConfirmButton: false,
                 timer: 4000
               });
+                 //validar fomrulario
+              if ($('#select_1').val() == "" || $('#txt_motivo').val() == "") {
 
-             
-              console.log($('#select_1').val());
-
-              //validar fomrulario
-              if($('#select_1').val() =="" || $('#txt_motivo').val() ==""){
-              
                 Toast.fire({
-                      icon: 'error',
-                      title: 'Campos Vacios!!'
-                    })
-              
-              }else
-              {
+                  icon: 'error',
+                  title: 'Campos Vacios!!'
+                })
+
+              } else {
                 $.ajax({
-                type: "POST",
-                url: "<?php echo RUTA_URL ?>/paginas/guardar_corte/",
-                data: {
-                  'num': $('#txt_num').val(),
-                  'nom': $('#nombre').val(),
-                  'dom': $('#domicilio').val(),
-                  'col': $('#colonia').val(),
-                  'ven': $('#vencidos').val(),
-                  'sal': $('#saldo').val(),
-                  'motivo': $('#txt_motivo').val(),
-                  'id_corte': $('#select_1').val(),
-                },
-                success: function(result) {
-                  var result = $.parseJSON(result);
-                  var datos1 = result.datos;
-                  no_sol = result.folio;
-
-                  if (result.estado == 'success') {          
-                    $('#nombre').val("");
-                    $('#domicilio').val("");
-                    $('#colonia').val("");
-                    $('#vencidos').val("");
-                    $('#saldo').val("");
-                    $('#txt_motivo').val("");
+                  type: "POST",
+                  url: "<?php echo RUTA_URL ?>/paginas/guardar_corte/",
+                  data: {
+                    'num': $('#txt_num').val(),
+                    'nom': $('#nombre').val(),
+                    'dom': $('#domicilio').val(),
+                    'col': $('#colonia').val(),
+                    'ven': $('#vencidos').val(),
+                    'sal': $('#saldo').val(),
+                    'motivo': $('#txt_motivo').val(),
+                    'id_corte': $('#select_1').val(),
+                  },
+                  success: function(result) {
+                    var result = $.parseJSON(result);
+                    console.log(result);
+                    var datos1 = result.datos;
+                    var folio = result.folio;
                     
+                    no_sol = result.folio;
 
-          
-                    Swal.fire('Servicio Cortado');
-                  }else if(result.estado == 'val')
-                  {
-                   
-                  } else {
-                    Toast.fire({
-                      icon: 'error',
-                      title: 'Aviso!!'
-                    })
+                    if (result.estado == 'success') {
+                      $('#nombre').val("");
+                      $('#domicilio').val("");
+                      $('#colonia').val("");
+                      $('#vencidos').val("");
+                      $('#saldo').val("");
+                      $('#txt_motivo').val("");
+
+                      document.getElementById("btn_guardar").value = "Guardar";
+                      document.getElementById('btn_guardar').disabled = false;
+
+                      Swal.fire('Registro Agregado. Folio # '+folio);
+                    } else if (result.estado == 'val') {
+
+                    } else {
+                      Toast.fire({
+                        icon: 'error',
+                        title: 'Aviso!!'
+                      })
+                    }
                   }
-                }
-              });
+                });
               }
-             
+
 
             });
           </script>
