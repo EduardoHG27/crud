@@ -1488,21 +1488,10 @@ class Usuario
         $this->db->query('SELECT `ID_COMP_COV` FROM `dat_cob_header` WHERE `NO_CUENTA_COV` =' . $ruta);
         $if = $this->db->registros();
 
-        
-
 
         if ($if == null) {
-
-            var_dump($ruta);
-
-            $this->db->query('SELECT IMP_VENCIDO_DETDET FROM DAT_DETALLE_DETALLE WHERE NO_CUENTA_DETDET =' . $ruta);
-            $resultados1 = $this->db->registros();
-
-            var_dump($resultados1);
-
-
-            //$this->db->query('SELECT DESC_CONCEPTO_FAC_DETDET,IMP_MES_DETDET,IMP_VENCIDO_DETDET,IMP_TOT_DETDET FROM DAT_DETALLE_DETALLE WHERE NO_CUENTA_DETDET =' . $ruta);
-            //$resultados = $this->db->registros();
+            $this->db->query('SELECT DESC_CONCEPTO_FAC_DETDET,IMP_MES_DETDET,IMP_VENCIDO_DETDET,IMP_TOT_DETDET FROM DAT_DETALLE_DETALLE WHERE NO_CUENTA_DETDET =' . $ruta);
+            $resultados = $this->db->registros();
 
             //$this->db->query('SELECT DESC_CONCEPTO_DETFAC,IMP_MES_DETFAC,IMP_VENCIDO_DETFAC,IMP_TOT_DESFAC FROM DAT_DETALLE_DETALLE WHERE NO_CUENTA_DETDET ='.$ruta);
             //$resultados= $this->db->registros();
@@ -1513,7 +1502,7 @@ class Usuario
             $_SESSION['no_cuenta_conv'] = $int;
 
             if ($datos = $this->db->registros()) {
-                return array('status' => 'success', 'datos' => $datos, 'resultado' => $resultados1);
+                return array('status' => 'success', 'datos' => $datos, 'resultado' => $resultados);
             } else {
                 return array('status' => 'error');
             }
