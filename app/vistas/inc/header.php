@@ -195,6 +195,11 @@ if(isset($_POST["cerrarSession"])){ //cuando presiona el boton cerrsr sesion
       </li>
       </div>
       <div id="heder_Lecturas" <?php if($GLOBALS['menu_conv'] == 0){ echo 'style="display: none"';} ?>> 
+      <li class="nav-item">
+        <a href="<?php echo RUTA_URL; ?>/paginas/form_insertar" class="nav-link">Prueba</a>
+      </li>
+      </div>
+      <div id="heder_Lecturas" <?php if($GLOBALS['menu_conv'] == 0){ echo 'style="display: none"';} ?>> 
       <li class="nav-item d-none d-sm-inline-block">
         <a href="<?php echo RUTA_URL; ?>/paginas/form_prueba" class="nav-link"></a>
       </li>
