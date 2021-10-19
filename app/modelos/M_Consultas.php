@@ -336,6 +336,8 @@ class M_Consultas{
         }
         
         if ($datos=$this->db->registros()) {
+
+            var_dump($datos);
            
             $numreg=count($datos);
             $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO; 
