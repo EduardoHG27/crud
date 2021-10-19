@@ -1488,7 +1488,7 @@ class Usuario
         $this->db->query('SELECT `ID_COMP_COV` FROM `dat_cob_header` WHERE `NO_CUENTA_COV` =' . $ruta);
         $if = $this->db->registros();
 
-        var_dump($if);
+        
 
 
         if ($if == null) {
