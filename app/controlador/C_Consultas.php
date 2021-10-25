@@ -131,6 +131,59 @@ class C_Consultas extends Controlador
                 }
     }
 
+    
+    public function siguiente_dato_update()
+    {
+
+        $datos=$_POST['data1'];
+
+
+        $resultado_sol=$this->usuarioModelo->next_data_update($datos);
+
+    }
+    public function siguiente_dato()
+    {
+       
+        $datos= array(
+            'txt_reg' =>  $txt_reg=$_POST['txt_reg']
+        );
+
+        
+        $resultado_sol=$this->usuarioModelo->next_data($datos);
+        
+       
+        
+  
+            if ($resultado_sol['estado'] == 'success') {
+                echo json_encode($resultado_sol);
+            } else if ($resultado_sol['estado'] == 'error') {
+                echo json_encode($resultado_sol);
+                }
+    }
+
+    public function anterior_dato()
+    {
+       
+        $datos= array(
+            'txt_reg' =>  $txt_reg=$_POST['txt_reg']
+        );
+
+      
+        
+        $resultado_sol=$this->usuarioModelo->next1_data($datos);
+        
+       
+        
+  
+            if ($resultado_sol['estado'] == 'success') {
+                echo json_encode($resultado_sol);
+            } else if ($resultado_sol['estado'] == 'error') {
+                echo json_encode($resultado_sol);
+                }
+    }
+
+    
+
 
     public function cargar_seg()
     {
@@ -196,12 +249,9 @@ public function tabla_ajax()
             'txt_com' =>  $txt_com=$_POST['txt_com']
         );
         
-        $resultado_sol=$this->usuarioModelo->select_pad_consulta($datos);
-        
-                
+        $resultado_sol=$this->usuarioModelo->select_pad_consulta($datos);   
         // $estado=$resultado_sol['estado'];
         // $datos=$resultado_sol['datos'];
-        
   
             if ($resultado_sol['estado'] == 'success') {
                 echo json_encode($resultado_sol);

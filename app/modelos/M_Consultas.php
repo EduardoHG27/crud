@@ -1,9 +1,10 @@
 <?php
 
-class M_Consultas{
+class M_Consultas
+{
 
     private $db;
-   
+
 
     public function __construct()
     {
@@ -24,51 +25,39 @@ class M_Consultas{
             $this->db->query("select * from dat_padron where " . $var . " = '" . $txtid . "'");
         } else if ($parametro == 'Domicilio') {
             $pieces = explode("-", $txtid);
-          
+
             $var = 'DOMICILIO_USUARIO';
 
             $this->db->query("select * from dat_padron where CALLE_USUARIO = '" . $pieces[0] . "' and COLONIA_USUARIO ='" . $pieces[1] . "'");
-
-
-        } else if ($parametro == 'Nombre')
-        {
+        } else if ($parametro == 'Nombre') {
             $var = 'NOMBRE_USUARIO';
             $this->db->query("select * from dat_padron where " . $var . " = '" . $txtid . "'");
-        }  
-        else if ($parametro == 'Medidor')
-        {
+        } else if ($parametro == 'Medidor') {
             $var = 'NO_SERIE_MEDIDOR';
             $this->db->query("select * from dat_padron where " . $var . " = '" . $txtid . "'");
-        }  
-        else if ($parametro == 'Ruta y folio')
-        {
-      
+        } else if ($parametro == 'Ruta y folio') {
+
             $pieces = explode(" ", $txtid);
-      
-            
-            $this->db->query("select * from dat_padron where ID_RUTA_LECTURA_USUARIO = '" . $pieces[0] . "' and FOLIO_LECTURA_USUARIO = '" . $pieces[1] . "'"); 
-        }
-        else
-        {
 
-        }
-        
-        if ($datos=$this->db->registros()) {
-           
-            $numreg=count($datos);
 
-           
-           $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO; 
-           $_SESSION["nombre"] = $datos[0]->NOMBRE_USUARIO; 
-           $_SESSION["domicilio"] = $datos[0]->DOMICILIO_USUARIO;           
-     
-            return array('estado' => 'success','message' => 'var_datos','datos'=>$datos,'parametro'=>$parametro ,'num_reg'=>$numreg );
-			
+            $this->db->query("select * from dat_padron where ID_RUTA_LECTURA_USUARIO = '" . $pieces[0] . "' and FOLIO_LECTURA_USUARIO = '" . $pieces[1] . "'");
         } else {
-      
+        }
+
+        if ($datos = $this->db->registros()) {
+
+            $numreg = count($datos);
+
+
+            $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO;
+            $_SESSION["nombre"] = $datos[0]->NOMBRE_USUARIO;
+            $_SESSION["domicilio"] = $datos[0]->DOMICILIO_USUARIO;
+
+            return array('estado' => 'success', 'message' => 'var_datos', 'datos' => $datos, 'parametro' => $parametro, 'num_reg' => $numreg);
+        } else {
+
             return array('estado' => 'error', 'message' => 'var_sin_datos');
-            
-		}
+        }
     }
 
     public function search_quej($datos)
@@ -78,62 +67,43 @@ class M_Consultas{
         $act                          = $datos['sel_act'];
         $cuenta                           = $datos['txt_cuenta'];
 
-        if($cuenta=='')
-        {
+        if ($cuenta == '') {
 
-            $this->db->query("select q.NO_CUENTA_Q,dat.NOMBRE_USUARIO,dat.DOMICILIO_USUARIO,c.DESC_QUEJA,q.DESC_Q,q.FECHA_QUEJA,q.FOLIO_QUEJA from dat_quejas q inner join dat_padron dat on (dat.NO_CUENTA_USUARIO=q.no_cuenta_q) inner join cat_quejas c on (c.id_queja=q.id_queja_q) where id_queja_q =".$op." and status ='".$act."'");
-       
-            if($datos=$this->db->registros())
-            {
-                
-                return array('estado' => 'success','datos'=>$datos);
-                
-            }
-            else
-            {
+            $this->db->query("select q.NO_CUENTA_Q,dat.NOMBRE_USUARIO,dat.DOMICILIO_USUARIO,c.DESC_QUEJA,q.DESC_Q,q.FECHA_QUEJA,q.FOLIO_QUEJA from dat_quejas q inner join dat_padron dat on (dat.NO_CUENTA_USUARIO=q.no_cuenta_q) inner join cat_quejas c on (c.id_queja=q.id_queja_q) where id_queja_q =" . $op . " and status ='" . $act . "'");
+
+            if ($datos = $this->db->registros()) {
+
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
                 return array('estado' => 'error', 'message' => 'var_sin_datos');
             }
-    
-        }
-        else
-        {
+        } else {
 
-            $this->db->query("select q.NO_CUENTA_Q,dat.NOMBRE_USUARIO,dat.DOMICILIO_USUARIO,c.DESC_QUEJA,q.DESC_Q,q.FECHA_QUEJA,q.FOLIO_QUEJA from dat_quejas q inner join dat_padron dat on (dat.NO_CUENTA_USUARIO=q.no_cuenta_q)inner join cat_quejas c on (c.id_queja=q.id_queja_q) where id_queja_q =".$op." and status ='".$act."' and dat.NO_CUENTA_USUARIO ='".$cuenta."'");
-       
-            if($datos=$this->db->registros())
-            {
-                
-                return array('estado' => 'success','datos'=>$datos);
-                
-            }
-            else
-            {
+            $this->db->query("select q.NO_CUENTA_Q,dat.NOMBRE_USUARIO,dat.DOMICILIO_USUARIO,c.DESC_QUEJA,q.DESC_Q,q.FECHA_QUEJA,q.FOLIO_QUEJA from dat_quejas q inner join dat_padron dat on (dat.NO_CUENTA_USUARIO=q.no_cuenta_q)inner join cat_quejas c on (c.id_queja=q.id_queja_q) where id_queja_q =" . $op . " and status ='" . $act . "' and dat.NO_CUENTA_USUARIO ='" . $cuenta . "'");
+
+            if ($datos = $this->db->registros()) {
+
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
                 return array('estado' => 'error', 'message' => 'var_sin_datos');
             }
-    
-
         }
-
-        
-      
-
-      
     }
 
-    
+
     public function obtener_bri($cod)
     {
-    
 
 
 
-             //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
-             //true sino error 
+
+        //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
+        //true sino error 
         $this->db->query("select id_brigada,desc_brigada from cat_brigada where id_queja ='" . $cod . "'");
-     
+
         if ($datos = $this->db->registros()) {
-            
-            
+
+
             return array('estado' => 'success', 'datos' => $datos);
         } else {
             return array('estado' => 'error');
@@ -142,7 +112,7 @@ class M_Consultas{
 
     public function sel_queja($cod)
     {
-    
+
 
         $tipo                  = $cod['sel_tipo'];
         $act                    = $cod['sel_act'];
@@ -151,116 +121,94 @@ class M_Consultas{
         $date1              = $cod['datepicker_1'];
 
 
-        $_SESSION["tipo"]=$tipo;
-        $_SESSION["act"]=$act;
-        $_SESSION["date"]=$date;
-        $_SESSION["date1"]=$date1;
-
-  
-      
-             //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
-             //true sino error 
-             if($act=='T' && $bri =='t')
-             {
-                
-                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."';");
-     
-                if ($datos = $this->db->registros()) {
-        
-                    return array('estado' => 'success', 'datos' => $datos);
-                } else {
-                    return array('estado' => 'error');
-                }
-             }
-             else if ($act=='T' && $bri !='na' && $bri!='t')
-             {
-               
-                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and asignado_a_dq ='" . $bri . "';");
-     
-                if ($datos = $this->db->registros()) {
-          
-
-                    $_SESSION["status"]=$datos[0]->status;
-                    return array('estado' => 'success', 'datos' => $datos);
-                } else {
-                    return array('estado' => 'error');
-                }
-             }
-             else if ($act!='T' && $bri =='t')
-             {
-              
-                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and status = '".$act."' ;");
-     
-                if ($datos = $this->db->registros()) {
-          
-                    $_SESSION["status"]=$datos[0]->status;
-                    return array('estado' => 'success', 'datos' => $datos);
-                } else {
-                    return array('estado' => 'error');
-                }
-             }
-
-
-             else if ($act!='T' && $bri !='t' && $bri !='na')
-             {
-              
-                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and status = '".$act."' and asignado_a_dq  = '".$bri."'  ;");
-     
-                if ($datos = $this->db->registros()) {
-          
-                    $_SESSION["status"]=$datos[0]->status;
-                    return array('estado' => 'success', 'datos' => $datos);
-                } else {
-                    return array('estado' => 'error');
-                }
-             }
+        $_SESSION["tipo"] = $tipo;
+        $_SESSION["act"] = $act;
+        $_SESSION["date"] = $date;
+        $_SESSION["date1"] = $date1;
 
 
 
-             else if ($act=='T' && $bri ='na')
-             {
-               
-                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and asignado_a_dq = '' ;");
-     
-                if ($datos = $this->db->registros()) {
-          
+        //seleccionar no cuenta ... tomar el primer caracter de id_estatus_usuario .. . Si el primer caracter es k
+        //true sino error 
+        if ($act == 'T' && $bri == 't') {
 
-                    $_SESSION["status"]=$datos[0]->status;
-                    return array('estado' => 'success', 'datos' => $datos);
-                } else {
-                    return array('estado' => 'error');
-                }
-             }
-             else if ($act!='T' && $bri ='na')
-             {
-               
-                $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '".$date."' AND '".$date1."' and asignado_a_dq = '' ;");
-     
-                if ($datos = $this->db->registros()) {
-          
+            $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '" . $date . "' AND '" . $date1 . "';");
 
-                    $_SESSION["status"]=$datos[0]->status;
-                    return array('estado' => 'success', 'datos' => $datos);
-                } else {
-                    return array('estado' => 'error');
-                }
-             }
-            
-       
+            if ($datos = $this->db->registros()) {
+
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        } else if ($act == 'T' && $bri != 'na' && $bri != 't') {
+
+            $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '" . $date . "' AND '" . $date1 . "' and asignado_a_dq ='" . $bri . "';");
+
+            if ($datos = $this->db->registros()) {
+
+
+                $_SESSION["status"] = $datos[0]->status;
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        } else if ($act != 'T' && $bri == 't') {
+
+            $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '" . $date . "' AND '" . $date1 . "' and status = '" . $act . "' ;");
+
+            if ($datos = $this->db->registros()) {
+
+                $_SESSION["status"] = $datos[0]->status;
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        } else if ($act != 'T' && $bri != 't' && $bri != 'na') {
+
+            $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '" . $date . "' AND '" . $date1 . "' and status = '" . $act . "' and asignado_a_dq  = '" . $bri . "'  ;");
+
+            if ($datos = $this->db->registros()) {
+
+                $_SESSION["status"] = $datos[0]->status;
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        } else if ($act == 'T' && $bri = 'na') {
+
+            $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '" . $date . "' AND '" . $date1 . "' and asignado_a_dq = '' ;");
+
+            if ($datos = $this->db->registros()) {
+
+
+                $_SESSION["status"] = $datos[0]->status;
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        } else if ($act != 'T' && $bri = 'na') {
+
+            $this->db->query("select * from dat_quejas where id_queja_q ='" . $tipo . "' and fecha_queja BETWEEN '" . $date . "' AND '" . $date1 . "' and asignado_a_dq = '' ;");
+
+            if ($datos = $this->db->registros()) {
+
+
+                $_SESSION["status"] = $datos[0]->status;
+                return array('estado' => 'success', 'datos' => $datos);
+            } else {
+                return array('estado' => 'error');
+            }
+        }
     }
 
     public function combo_brigada($id)
     {
-        $this->db->query("SELECT id_brigada,desc_brigada FROM cat_brigada where id_queja=".$id."");
-       
-        if($datos=$this->db->registros())
-        {
-         
-            return array('estado' => 'success','datos'=>$datos);
-			
-        }
-        else
-        {
+        $this->db->query("SELECT id_brigada,desc_brigada FROM cat_brigada where id_queja=" . $id . "");
+
+        if ($datos = $this->db->registros()) {
+
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
             return array('estado' => 'error', 'message' => 'var_sin_datos');
         }
     }
@@ -270,25 +218,22 @@ class M_Consultas{
         $bri                          = $datos['sel_bri'];
         $txt_fol                          = $datos['txt_fol'];
 
-        
+
         $_SESSION['brigada'] = $bri;
         $_SESSION['folio_bri'] = $txt_fol;
 
-        
+
         $fechaActual = date('Y-m-d');
-        $this->db->query("SELECT desc_brigada FROM cat_brigada where id_brigada=".$bri."");
-        $datos=$this->db->registro();
+        $this->db->query("SELECT desc_brigada FROM cat_brigada where id_brigada=" . $bri . "");
+        $datos = $this->db->registro();
 
-   
 
-        $this->db->query("update dat_quejas set asignado_a_dq = '".$datos->desc_brigada."', fecha_asignacion='".$fechaActual."' where folio_queja='" . $txt_fol . "'");
-           
-        if($this->db->execute())
-        {
-            return array('estado' => 'success','datos'=>$datos);
-        }
-        else
-        {
+
+        $this->db->query("update dat_quejas set asignado_a_dq = '" . $datos->desc_brigada . "', fecha_asignacion='" . $fechaActual . "' where folio_queja='" . $txt_fol . "'");
+
+        if ($this->db->execute()) {
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
             return array('estado' => 'error', 'message' => 'var_sin_datos');
         }
     }
@@ -306,43 +251,33 @@ class M_Consultas{
             $this->db->query("select * from dat_padron where " . $var . " = '" . $txtid . "'");
         } else if ($parametro == 'Domicilio') {
             $pieces = explode("-", $txtid);
-          
+
             $var = 'DOMICILIO_USUARIO';
 
             $this->db->query("select * from dat_padron where CALLE_USUARIO = '" . $pieces[0] . "' and COLONIA_USUARIO ='" . $pieces[1] . "'");
-
-
-        } else if ($parametro == 'Nombre')
-        {
+        } else if ($parametro == 'Nombre') {
             $var = 'NOMBRE_USUARIO';
             $this->db->query("select * from dat_padron where " . $var . " = '" . $txtid . "'");
-        }  
-        else if ($parametro == 'Medidor')
-        {
+        } else if ($parametro == 'Medidor') {
             $var = 'NO_SERIE_MEDIDOR';
             $this->db->query("select * from dat_padron where " . $var . " = '" . $txtid . "'");
-        }  
-        else if ($parametro == 'Ruta y folio')
-        {
-      
-            $pieces = explode(" ", $txtid);
-      
-            
-            $this->db->query("select * from dat_padron where ID_RUTA_LECTURA_USUARIO = '" . $pieces[0] . "' and FOLIO_LECTURA_USUARIO = '" . $pieces[1] . "'"); 
-        }
-        else
-        {
+        } else if ($parametro == 'Ruta y folio') {
 
+            $pieces = explode(" ", $txtid);
+
+
+            $this->db->query("select * from dat_padron where ID_RUTA_LECTURA_USUARIO = '" . $pieces[0] . "' and FOLIO_LECTURA_USUARIO = '" . $pieces[1] . "'");
+        } else {
         }
-        
-        if ($datos=$this->db->registros()) {
+
+        if ($datos = $this->db->registros()) {
 
             var_dump($datos);
-           
-            $numreg=count($datos);
-            $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO; 
-            $_SESSION["nombre"] = $datos[0]->NOMBRE_USUARIO; 
-            $_SESSION["domicilio"] = $datos[0]->DOMICILIO_USUARIO;   
+
+            $numreg = count($datos);
+            $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO;
+            $_SESSION["nombre"] = $datos[0]->NOMBRE_USUARIO;
+            $_SESSION["domicilio"] = $datos[0]->DOMICILIO_USUARIO;
 
 
 
@@ -384,273 +319,456 @@ class M_Consultas{
                 [ "Martena Mccray", "Post-Sales support", "Edinburgh", "8240", "2011/03/09", "$324,050" ],
                 [ "Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675" ]
             ];';
-            
-            
-    
-     
+
+
+
+
             return array($txt);
-			
         } else {
-      
+
             return array('estado' => 'error', 'message' => 'var_sin_datos');
-            
-		}
+        }
     }
 
 
-    public function obtener_datos_padron($id){
+    public function obtener_datos_padron($id)
+    {
+
+
+
+        $this->db->query("select * from dat_padron where NO_CUENTA_USUARIO = '" . $id . "'");
+        if ($datos = $this->db->registros()) {
+            $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO;
+            $_SESSION["nombre"] = $datos[0]->NOMBRE_USUARIO;
+            $_SESSION["domicilio"] = $datos[0]->DOMICILIO_USUARIO;
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
+            return array('estado' => 'error');
+        }
+    }
+
+
+    public function next_data_update($datos)
+    {
+
+        $num=count($datos);
+        for($i =0;$i<=$num;$i++)
+        {
+            $no_cu=$datos[$i]['no_cuenta_deth'];
+            $act=$datos[$i]['saldo_act_deth'];
+            $ven=$datos[$i]['saldo_ven_deth'];
+            $result= $act + $ven;
+ 
+            $this->db->query("update dat_detalle_header set saldo_act_deth = '0', saldo_ven_deth='".$result."' where no_cuenta_deth='".$no_cu."'");
+            if($this->db->execute())
+            {
+               echo 'Listo';
+            }
+            else
+            {
+                echo 'Error';
+            }
+            
+
+        }
+   
+
+        
+        $this->db->query("select no_cuenta_detdet,imp_vencido_detdet,imp_mes_detdet from dat_detalle_detalle");
+        $datos_1 = $this->db->registros();
+
+        
+        $num_1=count($datos_1);
+        
+        for($j =0;$j<=$num_1;$j++)
+        {
+
+            
+            $no_cu_1=$datos_1[$j]->no_cuenta_detdet;
+            $act_1=$datos_1[$j]->imp_mes_detdet;
+            $ven_1=$datos_1[$j]->imp_vencido_detdet;
+            $result_1= $act_1 + $ven_1;
+ 
+            $this->db->query("update dat_detalle_detalle set IMP_MES_DETDET ='0' where no_cuenta_detdet='".$no_cu_1."'");
+            if($this->db->execute())
+            {
+               echo 'Listo_1';
+            }
+            else
+            {
+                echo 'Error_1';
+            }
+            
+
+        }
 
        
+
+
+
+  
         
-        $this->db->query("select * from dat_padron where NO_CUENTA_USUARIO = '" . $id . "'");
-        if($datos=$this->db->registros())
-        {
-            $_SESSION["no_cuenta"] = $datos[0]->NO_CUENTA_USUARIO; 
-            $_SESSION["nombre"] = $datos[0]->NOMBRE_USUARIO; 
-            $_SESSION["domicilio"] = $datos[0]->DOMICILIO_USUARIO;       
-            return array('estado' => 'success','datos' => $datos);
-        }else
-        {
-            return array('estado' => 'error');
+
+        /*
+
+        $this->db->query("select no_cuenta_usuario from dat_padron");
+        $datos = $this->db->registros();
+      
+    
+
+        foreach ($datos as $arr => $dato) {
+
+          $this->db->query("select NO_CUENTA_PAGH from dat_pagos_header where NO_CUENTA_PAGH = '" . $dato->no_cuenta_usuario . "' and TIPO_DOCTO_PAGH ='REC'");
+          if($datos = $this->db->registros())
+          {
+            echo $dato->no_cuenta_usuario." siestaPR -- ";
+          }
+          else
+          {
+            echo $dato->no_cuenta_usuario." noestaPR -- ";
+          }
+
         }
 
+
+
+
+        $this->db->query("select * from dat_padron where no_cuenta_usuario = '" . $txtid . "'");
+
         
-    
+
+         
+         
+            
+        if ($datos = $this->db->registros()) {
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
+
+          
+        }
+
+
+
+
+        if ($datos = $this->db->registros()) {
+        } else {
+
+
+            $this->db->query("select * from dat_padron where no_cuenta_usuario = '" . $txtid . "'");
+        }
+        */
     }
 
-    public function change_status($folio){
+
+    public function next_data($datos)
+    {
+
+        $txtid                         = $datos['txt_reg'];
+      
+
+      
+
+        $this->db->query("select no_cuenta_deth,saldo_act_deth,saldo_ven_deth from dat_detalle_header");
+         if ($datos = $this->db->registros()) {
+            $num=count($datos);
+            var_dump($datos[1]->no_cuenta_deth);
+            for($i =0;$i<=$num;$i++)
+            {
+                $no_cu=$datos[$i]->no_cuenta_deth;
+                $act=$datos[$i]->saldo_act_deth;
+                $ven=$datos[$i]->saldo_ven_deth;
+                $result= $act + $ven;
+     
+                $this->db->query("update dat_detalle_header set saldo_act_deth = '0' where no_cuenta_deth='".$no_cu."'");
+                if($this->db->execute())
+                {
+                   echo 'Listo';
+                }
+                else
+                {
+                    echo 'Error';
+                }
+                
+    
+            }
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
+
+          
+        }
+       
+
+        /*
+
+        $this->db->query("select no_cuenta_usuario from dat_padron");
+        $datos = $this->db->registros();
+      
+    
+
+        foreach ($datos as $arr => $dato) {
+
+          $this->db->query("select NO_CUENTA_PAGH from dat_pagos_header where NO_CUENTA_PAGH = '" . $dato->no_cuenta_usuario . "' and TIPO_DOCTO_PAGH ='REC'");
+          if($datos = $this->db->registros())
+          {
+            echo $dato->no_cuenta_usuario." siestaPR -- ";
+          }
+          else
+          {
+            echo $dato->no_cuenta_usuario." noestaPR -- ";
+          }
+
+        }
+
+
+
+
+        $this->db->query("select * from dat_padron where no_cuenta_usuario = '" . $txtid . "'");
+
+        
+
+         
+         
+            
+        if ($datos = $this->db->registros()) {
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
+
+          
+        }
+
+
+
+
+        if ($datos = $this->db->registros()) {
+        } else {
+
+
+            $this->db->query("select * from dat_padron where no_cuenta_usuario = '" . $txtid . "'");
+        }
+        */
+    }
+
+    public function next1_data($datos)
+    {
+
+        $txtid                         = $datos['txt_reg'];
+
+
+        $txtid = $txtid - 1;
+
+        $this->db->query("select * from dat_padron where no_cuenta_usuario = '" . $txtid . "'");
+
+
+        //vincularvalores
+
+        if ($datos = $this->db->registros()) {
+
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
+            return array('estado' => 'false', 'message' => '');
+        }
+    }
+
+
+
+    public function change_status($folio)
+    {
 
         $fechaActual = date('Y-m-d');
-        $this->db->query("update dat_quejas set status = 'C',fecha_resolucion='".$fechaActual."' where folio_queja='" . $folio . "'");
-  
-        if($this->db->execute())
-        {
+        $this->db->query("update dat_quejas set status = 'C',fecha_resolucion='" . $fechaActual . "' where folio_queja='" . $folio . "'");
+
+        if ($this->db->execute()) {
             var_dump("hola");
             return array('estado' => 'success');
-			
-        }
-        else
-        {
+        } else {
             return array('estado' => 'error');
         }
-    
     }
-    
 
 
-    public function select_tip(){
+
+    public function select_tip()
+    {
 
 
         $this->db->query("select desc_larga_corte,desc_corta_corte from cat_cortes");
-      
 
-        if($datos=$this->db->registros())
-        {
-           
-            return array('estado' => 'success','datos'=>$datos);
-			
-        }
-        else
-        {
+
+        if ($datos = $this->db->registros()) {
+
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
             return array('estado' => 'error');
         }
-    
     }
 
-    public function get_cort($datos){
+    public function get_cort($datos)
+    {
 
         $select                         = $datos['sel_opt'];
         $txt_importe                    = $datos['txt_importe'];
         $txt_de                         = $datos['txt_de'];
         $txt_a                          = $datos['txt_a'];
 
-        $_SESSION["pag_ven_cor"]=$select;
-        $_SESSION["importe_cor"]=$txt_importe;
-        $_SESSION["tex_de_cor"]=$txt_de;
-        $_SESSION["tex_a_cor"]=$txt_a;
+        $_SESSION["pag_ven_cor"] = $select;
+        $_SESSION["importe_cor"] = $txt_importe;
+        $_SESSION["tex_de_cor"] = $txt_de;
+        $_SESSION["tex_a_cor"] = $txt_a;
 
         $this->db->query("SELECT distinct NO_CUENTA_USUARIO,NOMBRE_USUARIO,DOMICILIO_USUARIO,COD_POS_USUARIO,ID_RUTA_LECTURA_USUARIO,fh.PAGOS_VENCIDOS_FAC,fh.SALDO_TOT_FAC 
                           FROM dat_padron dp inner join dat_fac_header fh on 
-                          (fh.NO_CUENTA_FAC=dp.NO_CUENTA_USUARIO) where fh.PAGOS_VENCIDOS_FAC >='".$select."'
-                           and fh.SALDO_TOT_FAC >='".$txt_importe."'AND ID_RUTA_LECTURA_USUARIO BETWEEN '".$txt_de."' AND '".$txt_a."'");
-      
+                          (fh.NO_CUENTA_FAC=dp.NO_CUENTA_USUARIO) where fh.PAGOS_VENCIDOS_FAC >='" . $select . "'
+                           and fh.SALDO_TOT_FAC >='" . $txt_importe . "'AND ID_RUTA_LECTURA_USUARIO BETWEEN '" . $txt_de . "' AND '" . $txt_a . "'");
 
-        if($datos=$this->db->registros())
-        {
-            $_SESSION['datos_cortes']=$datos;
-            return array('estado' => 'success','datos'=>$datos);
-			
-        }
-        else
-        {
+
+        if ($datos = $this->db->registros()) {
+            $_SESSION['datos_cortes'] = $datos;
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
             return array('estado' => 'error');
         }
-    
     }
 
-    
 
-    public function inse_q($folio,$txt){
-    
+
+    public function inse_q($folio, $txt)
+    {
+
         $this->db->query("select * from dat_quejas_seguimiento where folios_qs = '" . $folio . "'");
-        $num=count($datos=$this->db->registros());
-        $num = $num+1;
+        $num = count($datos = $this->db->registros());
+        $num = $num + 1;
         $fechaActual = date('Y-m-d');
 
         $this->db->query("insert into dat_quejas_seguimiento(id_comp_qs,folios_qs,cons_qs ,fecha_qs,txt_qs)values
-            ('1','" . $folio . "','".$num."','".$fechaActual."','" . $txt . "')");
-           
-        
+            ('1','" . $folio . "','" . $num . "','" . $fechaActual . "','" . $txt . "')");
 
-        if($this->db->execute())
-        {
-            
+
+
+        if ($this->db->execute()) {
+
             return array('estado' => 'success');
-			
-        }
-        else
-        {
+        } else {
             return array('estado' => 'error');
         }
-    
     }
 
-    public function load_seg($id){
-    
+    public function load_seg($id)
+    {
+
         $this->db->query("select * from dat_quejas_seguimiento where folios_qs = '" . $id . "'");
-       
-        if($datos=$this->db->registros())
-        {
-            
-            return array('estado' => 'success','datos'=>$datos);
-			
-        }
-        else
-        {
+
+        if ($datos = $this->db->registros()) {
+
+            return array('estado' => 'success', 'datos' => $datos);
+        } else {
             return array('estado' => 'error', 'message' => 'var_sin_datos');
         }
-    
     }
 
-    public function mostrar_queja($id){
-    
+    public function mostrar_queja($id)
+    {
+
         $this->db->query("select desc_q from dat_quejas where folio_queja = '" . $id . "'");
-        if($datos=$this->db->registro())
-        {
-         
-            return array('estado' => 'success','datos' => $datos->desc_q);
-        }else
-        {
+        if ($datos = $this->db->registro()) {
+
+            return array('estado' => 'success', 'datos' => $datos->desc_q);
+        } else {
             return array('estado' => 'error');
         }
-
-        
-    
     }
 
-     // Formulario Lecturas
-    public function cargar_lecturas(){
+    // Formulario Lecturas
+    public function cargar_lecturas()
+    {
 
-      
-        
-        $this->db->query("select ANHO_LE24,MES_LE24,LEC_MES_LE24,CONSUMO_LE24,FECHA_LE24,INCOS1_LE24,LECTURISTA_LE24 from dat_lecturas24 where id_comp18 = 1 and no_cuenta_le24='".$_SESSION["no_cuenta"]."'");
-        
-        $resultados= $this->db->registros();
-     
-        if($resultados!=null)
-        {
-            return array('status' => 'success','datos' => $resultados);
-        }else
-        {
-            return array('status' => 'error');
-        }
 
-        
-    
-    }
 
-    public function cargar_header(){
+        $this->db->query("select ANHO_LE24,MES_LE24,LEC_MES_LE24,CONSUMO_LE24,FECHA_LE24,INCOS1_LE24,LECTURISTA_LE24 from dat_lecturas24 where id_comp18 = 1 and no_cuenta_le24='" . $_SESSION["no_cuenta"] . "'");
 
-      
-        
-        $this->db->query("select no_docto,fec_pago,id_caja,importe_pago,tipo_docto from his_linea_pagos_header where no_cuenta_15 ='".$_SESSION["no_cuenta"]."'");
-     
-       
-        $resultados= $this->db->registros();
-     
-        if($resultados!=null)
-        {
-            return array('status' => 'success','datos' => $resultados);
-        }else
-        {
+        $resultados = $this->db->registros();
+
+        if ($resultados != null) {
+            return array('status' => 'success', 'datos' => $resultados);
+        } else {
             return array('status' => 'error');
         }
     }
 
-    public function usuario_quej(){
+    public function cargar_header()
+    {
 
-      
-        
-        $this->db->query("select folio_queja,desc_q,status,fecha_queja,fecha_asignacion,cq.desc_queja from dat_quejas q inner join cat_quejas cq on (q.id_queja_q=cq.id_queja) where no_cuenta_q ='".$_SESSION["no_cuenta"]."'");
-  
-        $resultados= $this->db->registros();
 
-        if($resultados!=null)
-        {
-            return array('status' => 'success','datos' => $resultados);
-        }else
-        {
+
+        $this->db->query("select no_docto,fec_pago,id_caja,importe_pago,tipo_docto from his_linea_pagos_header where no_cuenta_15 ='" . $_SESSION["no_cuenta"] . "'");
+
+
+        $resultados = $this->db->registros();
+
+        if ($resultados != null) {
+            return array('status' => 'success', 'datos' => $resultados);
+        } else {
             return array('status' => 'error');
         }
     }
 
-    public function cargar_nodocto($datos){
- 
-         
+    public function usuario_quej()
+    {
+
+
+
+        $this->db->query("select folio_queja,desc_q,status,fecha_queja,fecha_asignacion,cq.desc_queja from dat_quejas q inner join cat_quejas cq on (q.id_queja_q=cq.id_queja) where no_cuenta_q ='" . $_SESSION["no_cuenta"] . "'");
+
+        $resultados = $this->db->registros();
+
+        if ($resultados != null) {
+            return array('status' => 'success', 'datos' => $resultados);
+        } else {
+            return array('status' => 'error');
+        }
+    }
+
+    public function cargar_nodocto($datos)
+    {
+
+
         $numero                           = $datos['numero'];
 
 
-        $this->db->query("select no_docto,fec_pago,id_caja,importe_pago,tipo_docto from his_linea_pagos_header where no_docto ='".$numero."'");
-     
-       
-        $resultados= $this->db->registros();
-        
+        $this->db->query("select no_docto,fec_pago,id_caja,importe_pago,tipo_docto from his_linea_pagos_header where no_docto ='" . $numero . "'");
 
-        $numero_docu=$resultados[0]->no_docto;
 
-        $this->db->query("select id_con_facturacion,importe from his_linea_pagos_detalle where no_docto ='".$numero_docu."'");
-    
-        $res= $this->db->registros();
-     
-   
-        if($resultados!=null)
-        {
-            return array('status' => 'success','datos' => $resultados,'dat'=>$res);
-        }else
-        {
+        $resultados = $this->db->registros();
+
+
+        $numero_docu = $resultados[0]->no_docto;
+
+        $this->db->query("select id_con_facturacion,importe from his_linea_pagos_detalle where no_docto ='" . $numero_docu . "'");
+
+        $res = $this->db->registros();
+
+
+        if ($resultados != null) {
+            return array('status' => 'success', 'datos' => $resultados, 'dat' => $res);
+        } else {
             return array('status' => 'error');
         }
-
-        
-    
     }
 
-    
-    public function obtener_trn($no_cuenta){
-      
 
-   
-        $this->db->query("select * from trn_registro_lectura where no_cuenta7='".$no_cuenta."'");
+    public function obtener_trn($no_cuenta)
+    {
 
-      
-        if ( $datos= $this->db->registros()) {
-                     
-            return array('estado' => 'success','datos'=>$datos );
-			
+
+
+        $this->db->query("select * from trn_registro_lectura where no_cuenta7='" . $no_cuenta . "'");
+
+
+        if ($datos = $this->db->registros()) {
+
+            return array('estado' => 'success', 'datos' => $datos);
         } else {
- 
+
             return array('estado' => 'error');
-            
         }
     }
 }

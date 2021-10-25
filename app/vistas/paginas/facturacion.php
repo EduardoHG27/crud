@@ -36,15 +36,26 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
 </div>
 <div class="col-md-12">
     <div class="row">
-        <div class="col-md-3">
+    <div class="col-md-3">
             <div class="form-group">
-                <h6> Generar Respaldo</h6>
+                <h6>Generar Respaldo </h6>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 <input type="button" class="btn btn-success my-2 my-sm-0" id="gen_resp" name="gen_resp" value="Chk" onclick="" />
             </div>
+
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <h6> Aplicar Pagos</h6>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+            <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_Buscar_sig" name="btn_Buscar_Sig" value="Chk" onclick="" />
+             </div>
 
         </div>
         <div class="col-md-3">
@@ -115,7 +126,14 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
+                                            <form class="form-horizontal" id="frmBuscar">
                                                 <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_calculo" name="btn_calculo" value="Chk" onclick="" />
+                                                <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_Buscar_ant" name="btn_Buscar_ant" value="Anterior" onclick="" />
+                                                  <br>
+                                                <input id="txt_reg" name="txt_reg" class="form-control mr-sm-2" type="text" aria-label="Search">
+                                                <input id="txt_status" name="txt_status" class="form-control mr-sm-2" type="text" aria-label="Search">
+                                                <input id="txt_tarifa" name="txt_tarifa" class="form-control mr-sm-2" type="text" aria-label="Search">
+                                            </form>
                                             </div>
 
                                         </div>
@@ -152,8 +170,7 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_imprimir" name="btn_imprimir" value="Chk" onclick="" />
-                                                                <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_hostras" name="btn_hostras" value="hostras" onclick="" />
-
+                                                               
                                                             </div>
 
                                                         </div>
@@ -1119,7 +1136,6 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
             timer: 4000
         });
 
-
         var datos = $('#idform').serialize();
         $.ajax({
             type: "POST",
@@ -1348,6 +1364,76 @@ $mysqli = new mysqli(DB_HOST, DB_USUARIO, DB_PASSWORD, DB_NOMBRE);
         //imprimir_prueba
 
     }
+
+    
+  $('#btn_Buscar_ant').click(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 4000
+    });
+
+    var datos = $('#frmBuscar').serialize();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo RUTA_URL ?>/C_Consultas/anterior_dato/",
+      data: datos,
+      success: function(result) {
+        var result = $.parseJSON(result);
+        var datos1 = result.datos;
+       
+        console.log(result);
+
+        if (datos1) {
+          Toast.fire({
+            icon: 'success',
+            title: 'Exito: Registro encontrado.'
+          })
+    
+          $('#txt_reg').val(datos1[0].NO_CUENTA_USUARIO);
+          $('#txt_status').val(datos1[0].ID_STATUS_USUARIO);
+          $('#txt_tarifa').val(datos1[0].DESC_TARIFA_USUARIO);
+        
+        } else {
+
+
+      
+
+
+        }
+      }
+    });
+
+    return false;
+  });
+
+
+  $('#btn_Buscar_sig').click(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 4000
+    });
+
+    var datos = $('#frmBuscar').serialize();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo RUTA_URL ?>/C_Consultas/siguiente_dato/",
+      data: datos,
+      success: function(result) {
+        var result = $.parseJSON(result);
+        var datos1 = result.datos;
+       
+        console.log(result);
+
+       
+      }
+    });
+
+    return false;
+  });
 </script>
 
 <?php require RUTA_APP . '/vistas/inc/footer.php'; ?>

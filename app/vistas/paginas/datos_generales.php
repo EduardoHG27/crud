@@ -30,13 +30,16 @@
           <input id="txt_reg" name="txt_reg" class="form-control mr-sm-2" type="text" placeholder="Datos" aria-label="Search">
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group">
           <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_Buscar" name="btn_Buscar" value="Buscar" onclick="" />
+          <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_Buscar_ant" name="btn_Buscar_ant" value="Anterior" onclick="" />
+          <input type="button" class="btn btn-success my-2 my-sm-0" id="btn_Buscar_sig" name="btn_Buscar_Sig" value="Siguiente" onclick="" />
+
           <!-- <input name="search" id="search" class="form-control mr-sm-2" type="text" placeholder="Datos" aria-label="Search">-->
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <!-- <span class="btn btn-success my-2 my-sm-0" data-toggle="modal" data-target="#mod_lectura" onclick="crear_excel();">Excel</span>-->
         </div>
@@ -729,6 +732,211 @@
 
     return false;
   });
+
+
+  $('#btn_Buscar_sig').click(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 4000
+    });
+
+    var datos = $('#frmBuscar').serialize();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo RUTA_URL ?>/C_Consultas/siguiente_dato/",
+      data: datos,
+      success: function(result) {
+        var result = $.parseJSON(result);
+        var datos1 = result.datos;
+       
+        console.log(result);
+
+        if (datos1) {
+          Toast.fire({
+            icon: 'success',
+            title: 'Exito: Registro encontrado.'
+          })
+          $('#txtcuenta_usuario').val(datos1[0].NO_CUENTA_USUARIO);
+          $('#txtsol').val(datos1[0].NO_SOLICITUD_USUARIO);
+          $('#txtcli').val(datos1[0].BAN_USU_CLIE);
+          $('#txtsta').val(datos1[0].ID_STATUS_USUARIO);
+          $('#txt_reg').val(datos1[0].NO_CUENTA_USUARIO);
+
+          $('#txtdestaf').val(datos1[0].DESC_TARIFA_USUARIO);
+          $('#txtidserv').val(datos1[0].ID_SERVICIO_USUARIO);
+          $('#txtfac').val(datos1[0].ID_TIPO_FACTURACION);
+          $('#txtgirvv_id').val(datos1[0].DESC_GIRO_VIV_USUARIO);
+          $('#txtdes_subsidio').val(datos1[0].DESC_SUBSIDIO_USUARIO);
+          $('#txtnombre').val(datos1[0].NOMBRE_USUARIO);
+          $('#txtrazon').val(datos1[0].RAZON_SOCIAL_USUARIO);
+          $('#txtrep').val(datos1[0].REPRES_LEGAL_USUARIO);
+          $('#txtdom').val(datos1[0].DOMICILIO_USUARIO);
+          $('#txtmun').val(datos1[0].MUNICIPIO_USUARIO);
+          $('#txtdes_comolocal').val(datos1[0].COMOLOCAL_USUARIO);
+          $('#txtcol').val(datos1[0].COLONIA_USUARIO);
+          $('#txtpos').val(datos1[0].COD_POS_USUARIO);
+          $('#txtlat').val(datos1[0].LATITUD_USUARIO);
+          $('#txtlon').val(datos1[0].LONGITUD_USUARIO);
+          $('#txtref').val(datos1[0].REFERENCIA_DOMICILIO_USUARIO);
+          $('#txtfecha_solicitud').val(datos1[0].FECHA_SOLICITUD_USUARIO);
+          $('#txtfecha_alta').val(datos1[0].FECHA_ALTA_USUARIO);
+          $('#txtfecha_baja').val(datos1[0].FECHA_BAJA_USUARIO);
+          $('#txtrfc').val(datos1[0].RFC_USUARIO);
+          $('#txtcurp').val(datos1[0].CURP_USUARIO);
+          $('#txtemail').val(datos1[0].EMAIL_USUARIO);
+          $('#txttel').val(datos1[0].TELEFONO1_USUARIO);
+          $('#txttel2').val(datos1[0].TELEFONO2_USUARIO);
+          $('#txtsec').val(datos1[0].SECTOR_LECTURA);
+          $('#txtruta_1').val(datos1[0].ID_RUTA_LECTURA_USUARIO);
+          $('#txtfoliolec').val(datos1[0].FOLIO_LECTURA_USUARIO);
+          $('#txtdiametrotoma').val(datos1[0].ID_DIAMETRO_DESC_DIAMETRO_TOMATOMA);
+          $('#txtdigmed').val(datos1[0].DESC_MARCA_MEDIDOR_USUARIO);
+          $('#txtidmed').val(datos1[0].NO_SERIE_MEDIDOR);
+          $('#txtdigt').val(datos1[0].NO_DIGIT_MEDIDOR);
+          $('#txtconfi').val(datos1[0].USUAR_CONFIDENCIAL);
+          $('#txtfactotr').val(datos1[0].FACT_OTRO);
+          $('#txtidcomp').val(datos1[0].ID_COMP1);
+          $('#txttar').val(datos1[0].ID_TARIFA_USUARIO);
+          $('#txtgirvv').val(datos1[0].ID_GIRO_VIV_USUARIO);
+          $('#txtsub').val(datos1[0].ID_SUBSIDIO_USUARIO);
+          $('#txtpai').val(datos1[0].PAIS_USUARIO);
+          $('#txtest').val(datos1[0].ESTADO_USUARIO);
+          $('#txtcal').val(datos1[0].CALLE_USUARIO);
+          $('#txtiddiametrotoma').val(datos1[0].ID_DIAMETRO_TOMA);
+          $('#txtid_carc').val(datos1[0].ID_MARCA_MEDIOR_USUARIO);
+          $('#txtconfr').val(datos1[0].CON_FRACC);
+
+          $("#heder_Lecturas").show();
+          $("#heder_Faturacion").show();
+          $("#heder_pagos").show();
+          $("#heder_Otros").show();
+          $("#heder_Convenios").show();
+          $("#heder_Cortes").show();
+          $("#heder_Quejas").show();
+          $("#heder_Galeria").show();
+          $("#heder_ubicacion").show();
+          $("#heder_Datos").show();
+          $("#heder_mas").show();
+
+
+
+        } else {
+
+
+      
+
+
+        }
+      }
+    });
+
+    return false;
+  });
+
+
+  $('#btn_Buscar_ant').click(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 4000
+    });
+
+    var datos = $('#frmBuscar').serialize();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo RUTA_URL ?>/C_Consultas/anterior_dato/",
+      data: datos,
+      success: function(result) {
+        var result = $.parseJSON(result);
+        var datos1 = result.datos;
+       
+        console.log(result);
+
+        if (datos1) {
+          Toast.fire({
+            icon: 'success',
+            title: 'Exito: Registro encontrado.'
+          })
+          $('#txtcuenta_usuario').val(datos1[0].NO_CUENTA_USUARIO);
+          $('#txtsol').val(datos1[0].NO_SOLICITUD_USUARIO);
+          $('#txtcli').val(datos1[0].BAN_USU_CLIE);
+          $('#txtsta').val(datos1[0].ID_STATUS_USUARIO);
+          $('#txt_reg').val(datos1[0].NO_CUENTA_USUARIO);
+
+          $('#txtdestaf').val(datos1[0].DESC_TARIFA_USUARIO);
+          $('#txtidserv').val(datos1[0].ID_SERVICIO_USUARIO);
+          $('#txtfac').val(datos1[0].ID_TIPO_FACTURACION);
+          $('#txtgirvv_id').val(datos1[0].DESC_GIRO_VIV_USUARIO);
+          $('#txtdes_subsidio').val(datos1[0].DESC_SUBSIDIO_USUARIO);
+          $('#txtnombre').val(datos1[0].NOMBRE_USUARIO);
+          $('#txtrazon').val(datos1[0].RAZON_SOCIAL_USUARIO);
+          $('#txtrep').val(datos1[0].REPRES_LEGAL_USUARIO);
+          $('#txtdom').val(datos1[0].DOMICILIO_USUARIO);
+          $('#txtmun').val(datos1[0].MUNICIPIO_USUARIO);
+          $('#txtdes_comolocal').val(datos1[0].COMOLOCAL_USUARIO);
+          $('#txtcol').val(datos1[0].COLONIA_USUARIO);
+          $('#txtpos').val(datos1[0].COD_POS_USUARIO);
+          $('#txtlat').val(datos1[0].LATITUD_USUARIO);
+          $('#txtlon').val(datos1[0].LONGITUD_USUARIO);
+          $('#txtref').val(datos1[0].REFERENCIA_DOMICILIO_USUARIO);
+          $('#txtfecha_solicitud').val(datos1[0].FECHA_SOLICITUD_USUARIO);
+          $('#txtfecha_alta').val(datos1[0].FECHA_ALTA_USUARIO);
+          $('#txtfecha_baja').val(datos1[0].FECHA_BAJA_USUARIO);
+          $('#txtrfc').val(datos1[0].RFC_USUARIO);
+          $('#txtcurp').val(datos1[0].CURP_USUARIO);
+          $('#txtemail').val(datos1[0].EMAIL_USUARIO);
+          $('#txttel').val(datos1[0].TELEFONO1_USUARIO);
+          $('#txttel2').val(datos1[0].TELEFONO2_USUARIO);
+          $('#txtsec').val(datos1[0].SECTOR_LECTURA);
+          $('#txtruta_1').val(datos1[0].ID_RUTA_LECTURA_USUARIO);
+          $('#txtfoliolec').val(datos1[0].FOLIO_LECTURA_USUARIO);
+          $('#txtdiametrotoma').val(datos1[0].ID_DIAMETRO_DESC_DIAMETRO_TOMATOMA);
+          $('#txtdigmed').val(datos1[0].DESC_MARCA_MEDIDOR_USUARIO);
+          $('#txtidmed').val(datos1[0].NO_SERIE_MEDIDOR);
+          $('#txtdigt').val(datos1[0].NO_DIGIT_MEDIDOR);
+          $('#txtconfi').val(datos1[0].USUAR_CONFIDENCIAL);
+          $('#txtfactotr').val(datos1[0].FACT_OTRO);
+          $('#txtidcomp').val(datos1[0].ID_COMP1);
+          $('#txttar').val(datos1[0].ID_TARIFA_USUARIO);
+          $('#txtgirvv').val(datos1[0].ID_GIRO_VIV_USUARIO);
+          $('#txtsub').val(datos1[0].ID_SUBSIDIO_USUARIO);
+          $('#txtpai').val(datos1[0].PAIS_USUARIO);
+          $('#txtest').val(datos1[0].ESTADO_USUARIO);
+          $('#txtcal').val(datos1[0].CALLE_USUARIO);
+          $('#txtiddiametrotoma').val(datos1[0].ID_DIAMETRO_TOMA);
+          $('#txtid_carc').val(datos1[0].ID_MARCA_MEDIOR_USUARIO);
+          $('#txtconfr').val(datos1[0].CON_FRACC);
+
+          $("#heder_Lecturas").show();
+          $("#heder_Faturacion").show();
+          $("#heder_pagos").show();
+          $("#heder_Otros").show();
+          $("#heder_Convenios").show();
+          $("#heder_Cortes").show();
+          $("#heder_Quejas").show();
+          $("#heder_Galeria").show();
+          $("#heder_ubicacion").show();
+          $("#heder_Datos").show();
+          $("#heder_mas").show();
+
+
+
+        } else {
+
+
+      
+
+
+        }
+      }
+    });
+
+    return false;
+  });
+
 
 
   function agregaFrmActualizar(id, id2, rfc, curp) {

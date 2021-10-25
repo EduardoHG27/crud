@@ -1630,11 +1630,11 @@ class Usuario
 
         $today = date("Y-m-d", $time);
 
-    
 
-        $fecha_ini =date("Y-m", $time);
 
-        $fecha_ini= $fecha_ini.'-1';
+        $fecha_ini = date("Y-m", $time);
+
+        $fecha_ini = $fecha_ini . '-1';
 
 
 
@@ -1658,10 +1658,10 @@ class Usuario
             if ($datos_cor = $this->db->registro()) {
 
                 $this->db->query("SELECT NO_RECIBO_PAGD,TIPO_DOCTO_PAGD,FECHA_PAGO_PAGD FROM 
-                dat_pagos_detalle where NO_CUENTA_PAGD ='10130' and FECHA_PAGO_PAGD BETWEEN '".$fecha_ini."' and '".$today."' and ID_CONCEPTO_FAC_PAGD  ='27'");
+                dat_pagos_detalle where NO_CUENTA_PAGD ='10130' and FECHA_PAGO_PAGD BETWEEN '" . $fecha_ini . "' and '" . $today . "' and ID_CONCEPTO_FAC_PAGD  ='27'");
                 $datos_pag = $this->db->registro();
 
-                return array('estado' => 'success', 'pad' => $datos_pad, 'cor' => $datos_cor, 'fac' => $datos_fac,'pagos'=>$datos_pag);
+                return array('estado' => 'success', 'pad' => $datos_pad, 'cor' => $datos_cor, 'fac' => $datos_fac, 'pagos' => $datos_pag);
             } else {
                 return array('estado' => 'error');
             }
@@ -1887,17 +1887,17 @@ class Usuario
         return $d && $d->format($format) == $date;
     }
 
-    public function save_recon($data, $fecha, $fecha_1,$folio_cor)
+    public function save_recon($data, $fecha, $fecha_1, $folio_cor)
     {
 
-      
+
         $val1 = $this->validateDate($fecha_1);
 
 
-        if ( $val1 != true ) {
+        if ($val1 != true) {
             return array('estado' => 'val');
         } else {
-            $this->db->query("update dat_cortes set fecha_pago_cor='" . $fecha . "',fecha_rec_cor='" . $fecha_1 . "',status_cor ='B' where no_cuenta_cor = '" . $data . "' and folio_cor='".$folio_cor."'");
+            $this->db->query("update dat_cortes set fecha_pago_cor='" . $fecha . "',fecha_rec_cor='" . $fecha_1 . "',status_cor ='B' where no_cuenta_cor = '" . $data . "' and folio_cor='" . $folio_cor . "'");
 
             //vincularvalores
 
@@ -2597,6 +2597,9 @@ class Usuario
         }
     }
 
+    
+    
+
     public function insertar_lecturas($data, $fecha)
     {
 
@@ -2615,6 +2618,17 @@ class Usuario
             $falla3[] = $dato->falla3;
 
             $num += 1;
+        }
+
+        if (isset($_POST['siguiente'])) { // si existe..
+            $id_vdi = $_POST['id_vdi'] + 1; // la tomamos y le sumamos 1
+            $sql = pg_query("SELECT * FROM tabla1 WHERE id_vdi='$id_vdi'");
+            $registro = pg_fetch_object($sql);
+        }
+        if (isset($_POST['anterior'])) { // si existe..
+            $id_vdi = $_POST['id_vdi'] - 1; // la tomamos y le restamos 1
+            $sql = pg_query("SELECT * FROM tabla1 WHERE id_vdi='$id_vdi'");
+            $registro = pg_fetch_object($sql);
         }
 
         $cadena = "insert into  trn_registro_lectura (no_comp7,no_cuenta7,anh_lectura,periodo_lectura,lectura_anterior_trn,lectura_tomada,consumo_trn,falla_1_trn,falla_2_trn,falla_3_trn,fecha_lectura_trn) values";
